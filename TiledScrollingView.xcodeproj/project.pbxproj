@@ -1,0 +1,462 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7E92D7731605039700FBF76C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7721605039700FBF76C /* UIKit.framework */; };
+		7E92D7751605039700FBF76C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7741605039700FBF76C /* Foundation.framework */; };
+		7E92D7771605039700FBF76C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7761605039700FBF76C /* CoreGraphics.framework */; };
+		7E92D77D1605039700FBF76C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7E92D77B1605039700FBF76C /* InfoPlist.strings */; };
+		7E92D77F1605039700FBF76C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D77E1605039700FBF76C /* main.m */; };
+		7E92D7831605039700FBF76C /* ACAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7821605039700FBF76C /* ACAppDelegate.m */; };
+		7E92D7861605039700FBF76C /* ACViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7851605039700FBF76C /* ACViewController.m */; };
+		7E92D7891605039700FBF76C /* ACViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E92D7871605039700FBF76C /* ACViewController_iPhone.xib */; };
+		7E92D78C1605039700FBF76C /* ACViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E92D78A1605039700FBF76C /* ACViewController_iPad.xib */; };
+		7E92D7941605039800FBF76C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7931605039800FBF76C /* SenTestingKit.framework */; };
+		7E92D7951605039800FBF76C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7721605039700FBF76C /* UIKit.framework */; };
+		7E92D7961605039800FBF76C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7741605039700FBF76C /* Foundation.framework */; };
+		7E92D79E1605039800FBF76C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7E92D79C1605039800FBF76C /* InfoPlist.strings */; };
+		7E92D7A11605039800FBF76C /* TiledScrollingViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7A01605039800FBF76C /* TiledScrollingViewTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7E92D7971605039800FBF76C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E92D7651605039700FBF76C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7E92D76D1605039700FBF76C;
+			remoteInfo = TiledScrollingView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7E92D76E1605039700FBF76C /* TiledScrollingView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TiledScrollingView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E92D7721605039700FBF76C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		7E92D7741605039700FBF76C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		7E92D7761605039700FBF76C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		7E92D77A1605039700FBF76C /* TiledScrollingView-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TiledScrollingView-Info.plist"; sourceTree = "<group>"; };
+		7E92D77C1605039700FBF76C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7E92D77E1605039700FBF76C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7E92D7801605039700FBF76C /* TiledScrollingView-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TiledScrollingView-Prefix.pch"; sourceTree = "<group>"; };
+		7E92D7811605039700FBF76C /* ACAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACAppDelegate.h; sourceTree = "<group>"; };
+		7E92D7821605039700FBF76C /* ACAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ACAppDelegate.m; sourceTree = "<group>"; };
+		7E92D7841605039700FBF76C /* ACViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACViewController.h; sourceTree = "<group>"; };
+		7E92D7851605039700FBF76C /* ACViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ACViewController.m; sourceTree = "<group>"; };
+		7E92D7881605039700FBF76C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ACViewController_iPhone.xib; sourceTree = "<group>"; };
+		7E92D78B1605039700FBF76C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ACViewController_iPad.xib; sourceTree = "<group>"; };
+		7E92D7921605039800FBF76C /* TiledScrollingViewTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TiledScrollingViewTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E92D7931605039800FBF76C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		7E92D79B1605039800FBF76C /* TiledScrollingViewTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TiledScrollingViewTests-Info.plist"; sourceTree = "<group>"; };
+		7E92D79D1605039800FBF76C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7E92D79F1605039800FBF76C /* TiledScrollingViewTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiledScrollingViewTests.h; sourceTree = "<group>"; };
+		7E92D7A01605039800FBF76C /* TiledScrollingViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiledScrollingViewTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7E92D76B1605039700FBF76C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E92D7731605039700FBF76C /* UIKit.framework in Frameworks */,
+				7E92D7751605039700FBF76C /* Foundation.framework in Frameworks */,
+				7E92D7771605039700FBF76C /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E92D78E1605039800FBF76C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E92D7941605039800FBF76C /* SenTestingKit.framework in Frameworks */,
+				7E92D7951605039800FBF76C /* UIKit.framework in Frameworks */,
+				7E92D7961605039800FBF76C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7E92D7631605039700FBF76C = {
+			isa = PBXGroup;
+			children = (
+				7E92D7781605039700FBF76C /* TiledScrollingView */,
+				7E92D7991605039800FBF76C /* TiledScrollingViewTests */,
+				7E92D7711605039700FBF76C /* Frameworks */,
+				7E92D76F1605039700FBF76C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7E92D76F1605039700FBF76C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7E92D76E1605039700FBF76C /* TiledScrollingView.app */,
+				7E92D7921605039800FBF76C /* TiledScrollingViewTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7E92D7711605039700FBF76C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7E92D7721605039700FBF76C /* UIKit.framework */,
+				7E92D7741605039700FBF76C /* Foundation.framework */,
+				7E92D7761605039700FBF76C /* CoreGraphics.framework */,
+				7E92D7931605039800FBF76C /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7E92D7781605039700FBF76C /* TiledScrollingView */ = {
+			isa = PBXGroup;
+			children = (
+				7E92D7811605039700FBF76C /* ACAppDelegate.h */,
+				7E92D7821605039700FBF76C /* ACAppDelegate.m */,
+				7E92D7841605039700FBF76C /* ACViewController.h */,
+				7E92D7851605039700FBF76C /* ACViewController.m */,
+				7E92D7871605039700FBF76C /* ACViewController_iPhone.xib */,
+				7E92D78A1605039700FBF76C /* ACViewController_iPad.xib */,
+				7E92D7791605039700FBF76C /* Supporting Files */,
+			);
+			path = TiledScrollingView;
+			sourceTree = "<group>";
+		};
+		7E92D7791605039700FBF76C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7E92D77A1605039700FBF76C /* TiledScrollingView-Info.plist */,
+				7E92D77B1605039700FBF76C /* InfoPlist.strings */,
+				7E92D77E1605039700FBF76C /* main.m */,
+				7E92D7801605039700FBF76C /* TiledScrollingView-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7E92D7991605039800FBF76C /* TiledScrollingViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				7E92D79F1605039800FBF76C /* TiledScrollingViewTests.h */,
+				7E92D7A01605039800FBF76C /* TiledScrollingViewTests.m */,
+				7E92D79A1605039800FBF76C /* Supporting Files */,
+			);
+			path = TiledScrollingViewTests;
+			sourceTree = "<group>";
+		};
+		7E92D79A1605039800FBF76C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7E92D79B1605039800FBF76C /* TiledScrollingViewTests-Info.plist */,
+				7E92D79C1605039800FBF76C /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7E92D76D1605039700FBF76C /* TiledScrollingView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E92D7A41605039800FBF76C /* Build configuration list for PBXNativeTarget "TiledScrollingView" */;
+			buildPhases = (
+				7E92D76A1605039700FBF76C /* Sources */,
+				7E92D76B1605039700FBF76C /* Frameworks */,
+				7E92D76C1605039700FBF76C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TiledScrollingView;
+			productName = TiledScrollingView;
+			productReference = 7E92D76E1605039700FBF76C /* TiledScrollingView.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7E92D7911605039800FBF76C /* TiledScrollingViewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E92D7A71605039800FBF76C /* Build configuration list for PBXNativeTarget "TiledScrollingViewTests" */;
+			buildPhases = (
+				7E92D78D1605039800FBF76C /* Sources */,
+				7E92D78E1605039800FBF76C /* Frameworks */,
+				7E92D78F1605039800FBF76C /* Resources */,
+				7E92D7901605039800FBF76C /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7E92D7981605039800FBF76C /* PBXTargetDependency */,
+			);
+			name = TiledScrollingViewTests;
+			productName = TiledScrollingViewTests;
+			productReference = 7E92D7921605039800FBF76C /* TiledScrollingViewTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7E92D7651605039700FBF76C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = AC;
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = AppCrafter.biz;
+			};
+			buildConfigurationList = 7E92D7681605039700FBF76C /* Build configuration list for PBXProject "TiledScrollingView" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7E92D7631605039700FBF76C;
+			productRefGroup = 7E92D76F1605039700FBF76C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7E92D76D1605039700FBF76C /* TiledScrollingView */,
+				7E92D7911605039800FBF76C /* TiledScrollingViewTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7E92D76C1605039700FBF76C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E92D77D1605039700FBF76C /* InfoPlist.strings in Resources */,
+				7E92D7891605039700FBF76C /* ACViewController_iPhone.xib in Resources */,
+				7E92D78C1605039700FBF76C /* ACViewController_iPad.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E92D78F1605039800FBF76C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E92D79E1605039800FBF76C /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7E92D7901605039800FBF76C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7E92D76A1605039700FBF76C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E92D77F1605039700FBF76C /* main.m in Sources */,
+				7E92D7831605039700FBF76C /* ACAppDelegate.m in Sources */,
+				7E92D7861605039700FBF76C /* ACViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E92D78D1605039800FBF76C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E92D7A11605039800FBF76C /* TiledScrollingViewTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7E92D7981605039800FBF76C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7E92D76D1605039700FBF76C /* TiledScrollingView */;
+			targetProxy = 7E92D7971605039800FBF76C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		7E92D77B1605039700FBF76C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7E92D77C1605039700FBF76C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		7E92D7871605039700FBF76C /* ACViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7E92D7881605039700FBF76C /* en */,
+			);
+			name = ACViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		7E92D78A1605039700FBF76C /* ACViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7E92D78B1605039700FBF76C /* en */,
+			);
+			name = ACViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+		7E92D79C1605039800FBF76C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7E92D79D1605039800FBF76C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7E92D7A21605039800FBF76C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7E92D7A31605039800FBF76C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7E92D7A51605039800FBF76C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TiledScrollingView/TiledScrollingView-Prefix.pch";
+				INFOPLIST_FILE = "TiledScrollingView/TiledScrollingView-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		7E92D7A61605039800FBF76C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TiledScrollingView/TiledScrollingView-Prefix.pch";
+				INFOPLIST_FILE = "TiledScrollingView/TiledScrollingView-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		7E92D7A81605039800FBF76C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TiledScrollingView.app/TiledScrollingView";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TiledScrollingView/TiledScrollingView-Prefix.pch";
+				INFOPLIST_FILE = "TiledScrollingViewTests/TiledScrollingViewTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		7E92D7A91605039800FBF76C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TiledScrollingView.app/TiledScrollingView";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TiledScrollingView/TiledScrollingView-Prefix.pch";
+				INFOPLIST_FILE = "TiledScrollingViewTests/TiledScrollingViewTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7E92D7681605039700FBF76C /* Build configuration list for PBXProject "TiledScrollingView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E92D7A21605039800FBF76C /* Debug */,
+				7E92D7A31605039800FBF76C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E92D7A41605039800FBF76C /* Build configuration list for PBXNativeTarget "TiledScrollingView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E92D7A51605039800FBF76C /* Debug */,
+				7E92D7A61605039800FBF76C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7E92D7A71605039800FBF76C /* Build configuration list for PBXNativeTarget "TiledScrollingViewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E92D7A81605039800FBF76C /* Debug */,
+				7E92D7A91605039800FBF76C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7E92D7651605039700FBF76C /* Project object */;
+}
