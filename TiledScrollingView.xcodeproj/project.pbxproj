@@ -21,6 +21,9 @@
 		7E92D7961605039800FBF76C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7741605039700FBF76C /* Foundation.framework */; };
 		7E92D79E1605039800FBF76C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7E92D79C1605039800FBF76C /* InfoPlist.strings */; };
 		7E92D7A11605039800FBF76C /* TiledScrollingViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7A01605039800FBF76C /* TiledScrollingViewTests.m */; };
+		7E92D7B316050C5000FBF76C /* ACTilePlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7B216050C5000FBF76C /* ACTilePlaceholder.m */; };
+		7E92D7B616052A8000FBF76C /* ACCGSizeComparator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7B516052A8000FBF76C /* ACCGSizeComparator.m */; };
+		7E92D7BD16061C6600FBF76C /* ACTiledScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7BC16061C6600FBF76C /* ACTiledScrollView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +57,12 @@
 		7E92D79D1605039800FBF76C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7E92D79F1605039800FBF76C /* TiledScrollingViewTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiledScrollingViewTests.h; sourceTree = "<group>"; };
 		7E92D7A01605039800FBF76C /* TiledScrollingViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiledScrollingViewTests.m; sourceTree = "<group>"; };
+		7E92D7AA160503F900FBF76C /* ACTiledScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTiledScrollView.h; sourceTree = "<group>"; };
+		7E92D7B116050C5000FBF76C /* ACTilePlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTilePlaceholder.h; sourceTree = "<group>"; };
+		7E92D7B216050C5000FBF76C /* ACTilePlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTilePlaceholder.m; sourceTree = "<group>"; };
+		7E92D7B416052A8000FBF76C /* ACCGSizeComparator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACCGSizeComparator.h; sourceTree = "<group>"; };
+		7E92D7B516052A8000FBF76C /* ACCGSizeComparator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACCGSizeComparator.m; sourceTree = "<group>"; };
+		7E92D7BC16061C6600FBF76C /* ACTiledScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTiledScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +129,7 @@
 				7E92D7871605039700FBF76C /* ACViewController_iPhone.xib */,
 				7E92D78A1605039700FBF76C /* ACViewController_iPad.xib */,
 				7E92D7791605039700FBF76C /* Supporting Files */,
+				7E92D7AD16050B3F00FBF76C /* ACTiledScrollView */,
 			);
 			path = TiledScrollingView;
 			sourceTree = "<group>";
@@ -152,6 +162,19 @@
 				7E92D79C1605039800FBF76C /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7E92D7AD16050B3F00FBF76C /* ACTiledScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				7E92D7AA160503F900FBF76C /* ACTiledScrollView.h */,
+				7E92D7BC16061C6600FBF76C /* ACTiledScrollView.m */,
+				7E92D7B116050C5000FBF76C /* ACTilePlaceholder.h */,
+				7E92D7B216050C5000FBF76C /* ACTilePlaceholder.m */,
+				7E92D7B416052A8000FBF76C /* ACCGSizeComparator.h */,
+				7E92D7B516052A8000FBF76C /* ACCGSizeComparator.m */,
+			);
+			name = ACTiledScrollView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,6 +289,9 @@
 				7E92D77F1605039700FBF76C /* main.m in Sources */,
 				7E92D7831605039700FBF76C /* ACAppDelegate.m in Sources */,
 				7E92D7861605039700FBF76C /* ACViewController.m in Sources */,
+				7E92D7B316050C5000FBF76C /* ACTilePlaceholder.m in Sources */,
+				7E92D7B616052A8000FBF76C /* ACCGSizeComparator.m in Sources */,
+				7E92D7BD16061C6600FBF76C /* ACTiledScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +473,7 @@
 				7E92D7A61605039800FBF76C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7E92D7A71605039800FBF76C /* Build configuration list for PBXNativeTarget "TiledScrollingViewTests" */ = {
 			isa = XCConfigurationList;
@@ -455,6 +482,7 @@
 				7E92D7A91605039800FBF76C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

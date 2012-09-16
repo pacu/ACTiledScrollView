@@ -1,6 +1,6 @@
 //
-//  TiledScrollingViewTests.m
-//  TiledScrollingViewTests
+//  ACCGSizeCoparator.h
+//  TiledScrollingView
 //
 //  Created by Francisco Gindre on 9/15/12.
 //  Copyright (c) 2012 AppCrafter.biz. All rights reserved.
@@ -24,30 +24,10 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
 //
-#import "TiledScrollingViewTests.h"
-#import "ACTilePlaceholder.h"
-@implementation TiledScrollingViewTests
+#import <Foundation/Foundation.h>
 
-- (void)setUp
-{
-    [super setUp];
-    
-    // Set-up code here.
-}
+@interface ACCGSizeComparator : NSObject
 
-- (void)tearDown
-{
-    // Tear-down code here.
-    
-    [super tearDown];
-}
 
-- (void)testExample
-{
-    NSObject *obj = [[[NSObject alloc]init] autorelease];
-    
-    ACTilePlaceholder *ph = [ACTilePlaceholder sharedPlaceholder];
-    
-}
-
++(NSComparisonResult) compareSize:(CGSize)size1 to:(CGSize)size2;
 @end

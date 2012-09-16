@@ -1,6 +1,6 @@
 //
-//  TiledScrollingViewTests.m
-//  TiledScrollingViewTests
+//  ACTilePlaceholder.h
+//  TiledScrollingView
 //
 //  Created by Francisco Gindre on 9/15/12.
 //  Copyright (c) 2012 AppCrafter.biz. All rights reserved.
@@ -24,30 +24,9 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
 //
-#import "TiledScrollingViewTests.h"
-#import "ACTilePlaceholder.h"
-@implementation TiledScrollingViewTests
+#import <Foundation/Foundation.h>
 
-- (void)setUp
-{
-    [super setUp];
-    
-    // Set-up code here.
-}
-
-- (void)tearDown
-{
-    // Tear-down code here.
-    
-    [super tearDown];
-}
-
-- (void)testExample
-{
-    NSObject *obj = [[[NSObject alloc]init] autorelease];
-    
-    ACTilePlaceholder *ph = [ACTilePlaceholder sharedPlaceholder];
-    
-}
-
+@interface ACTilePlaceholder : NSObject
++(ACTilePlaceholder*) sharedPlaceholder;
++(BOOL)isPlaceholder:(id)object;
 @end
