@@ -27,10 +27,15 @@
 #import "ACTiledScrollView.h"
 #import "ACTilePlaceholder.h"
 #import "ACCGSizeComparator.h"
-@interface ACTiledScrollView ()
 
-@end
 
+ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
+    
+    ACTileIndex idx;
+    idx.row = row;
+    idx.col = col;
+    return idx;
+}
 @implementation ACTiledScrollView
 
 #pragma  mark properties
@@ -40,26 +45,35 @@
 
 
 #pragma mark view life cycle
+
+-(id)initWithFrame:(CGRect)frame {
+    
+    self = [super initWithFrame:frame];
+
+    return self;
+}
 -(id)initWithTileSize:(CGSize)tileSize height:(NSUInteger)vTiles width:(NSUInteger)hTiles {
+    
+    
     if (vTiles <= 0 || hTiles <= 0){
         @throw [[[NSException alloc] initWithName:@"Invalid Argument" reason:@"height and size can't be Zero" userInfo:nil] autorelease];
     }
-    self = [super initWithFrame:CGRectMake(0, 0, _tileSize.height*_vTiles, _tileSize.width * _hTiles)];
+    CGRect rect=CGRectMake(0, 0, tileSize.width * hTiles,tileSize.height * vTiles);
+    self = [self initWithFrame:rect];
     
     if (self)  {
-
+        _minHeight = vTiles;
         _vTiles = vTiles;
         _hTiles = hTiles;
         _tileSize = tileSize;
-        int capacity = (vTiles*hTiles);
+        NSUInteger capacity = (vTiles*hTiles);
         NSNull *nullObject = [NSNull null];
         _tiles = [[NSMutableArray alloc] initWithCapacity:capacity];
         for (int i = 0; i<capacity; i++) {
             
             [_tiles addObject:nullObject];
         }
-        
-        
+               
     }
     return self;
     
@@ -130,13 +144,18 @@
     return [self frame].origin;
 }
 
--(void)setFrame:(CGRect)frame{
-    CGRect newFrame = CGRectMake(frame.origin.x, frame.origin.y, self.frame.size.width, self.frame.size.height);
-    
-    [super setFrame:newFrame];
-    
-}
+//-(void)setFrame:(CGRect)frame{
+//    
+//    
+//    [super setFrame:newFrame];
+//    
+//}
 
+
+-(CGSize)sizeThatFits:(CGSize)size {
+    
+    return CGSizeMake(_hTiles * _tileSize.width, _vTiles * _tileSize.height);
+}
 #pragma mark tile mgmt
 /**
  adds a tile to the view into beginning at the desired tile. If it does not fit in it will be added with a best fit criteria
@@ -147,8 +166,22 @@
     // check if size matches
     BOOL sizeMatches = [self isTileCompatible:tile];
     
+    if (!sizeMatches) {
+        
+        @throw [NSException exceptionWithName:@"InvalidTileSize"
+                                       reason:[NSString stringWithFormat:@"TileSize %@ does not match this tilesize %@",
+                                               NSStringFromCGSize([tile tileSize]),
+                                               NSStringFromCGSize(_tileSize)]
+                                     userInfo:nil];
+    }
     BOOL sizeCouldFitAtIndex = [self tile:tile fitsIn:index];
     
+    if (sizeCouldFitAtIndex) {
+        
+        NSIndexSet *indexSet = [self indexesForTile:tile at:index];
+        
+        
+    }
     
 
 
@@ -180,7 +213,7 @@
     
     id<TiledViewProtocol>  tile = [_tiles objectAtIndex:position];
     [[tile tileView] removeFromSuperview];
-    NSIndexSet *indices  = [self indexesForTile:tile at:position];
+    NSIndexSet *indices  = [self indexesForTile:tile atPosition:position];
     [_tiles removeObjectsAtIndexes:indices];
     
 }
@@ -196,13 +229,7 @@
  */
 -(NSArray*)allTiles {
     
-    NSIndexSet *set = [_tiles indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        
-        
-        return ![ACTilePlaceholder isPlaceholder:obj];
-    }];
-    
-    return [_tiles objectsAtIndexes:set];
+    return [self subviews];
 }
 
 
@@ -215,20 +242,20 @@
     if ([self tile:tile fitsIn:position]){
         return nil;
     }
-    NSMutableIndexSet *set = [[NSMutableIndexSet alloc] init];
+    NSMutableIndexSet *set = [[[NSMutableIndexSet alloc] init] autorelease];
     
-    CGSize size = [tile tileSize];
+    CGSize size = [tile sizeInTiles];
     NSInteger row, col;
     col = position.col;
     row = position.row;
     
-    for (NSUInteger i = col; i< col+ size.width; i++) {
-        for (NSUInteger j = row; j<row +size.height; j++) {
-            NSUInteger index = col * _vTiles + row;
+    for (NSUInteger i = col; i< (col+ size.width); i++) {
+        for (NSUInteger j = row; j<(row +size.height); j++) {
+            NSUInteger index = i * _vTiles + j;
             [set addIndex:index];
         }
     }
-    return set;
+    return [[[NSIndexSet alloc]initWithIndexSet:set] autorelease];
     
 }
 
@@ -252,7 +279,7 @@
  */
 -(BOOL)tile:(id<TiledViewProtocol>)tile fitsIn:(ACTileIndex)index{
     
-    BOOL couldFit = [ACCGSizeComparator compareSize:[tile sizeInTiles] to:CGSizeMake(_hTiles, _minHeight)];
+    BOOL couldFit = [ACCGSizeComparator compareSize:[tile sizeInTiles] to:CGSizeMake(_hTiles, _minHeight)] == NSOrderedSame;
     
     if (!couldFit && [self isTileCompatible:tile])
         return couldFit;
@@ -275,4 +302,16 @@
 }
 
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+}
+
+#pragma mark convience methods
+
+-(NSMutableArray*)resizeArray:(NSMutableArray*)array ToFitIndexSet:(NSIndexSet*)indexSet {
+    
+    
+    return nil;
+    
+}
 @end

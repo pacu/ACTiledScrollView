@@ -25,7 +25,25 @@
 //THE SOFTWARE.
 //
 #import <SenTestingKit/SenTestingKit.h>
+#import "ACTiledScrollView.h"
 
 @interface TiledScrollingViewTests : SenTestCase
+{
+    @private
+    ACTiledScrollView *_scrollview;
+    
+    CGSize _tileSize;
+}
 
+-(void)testInitWithTileSizeTest;
+-(void)testSetVerticalTilesTest;
+-(void)testSetHorizontalTilesTest;
+-(void)testAppendTileTest;
+-(void)testRemoveTileTest;
+-(void)testAllTilesTest;
+-(void)testIndexesForTileAtTest;
+-(void)testIndexesForTileAtPositionTest;
+-(void)testIsTileCompatibleTest;
+-(void)testTileFitsInTest;
+-(void)testResizeArrayToFitIndexSet;
 @end

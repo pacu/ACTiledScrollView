@@ -32,7 +32,7 @@
 static ACTilePlaceholder * instance = nil;
 
 
-+(ACTilePlaceholder*) sharedPlaceHolder {
++(ACTilePlaceholder*) sharedPlaceholder {
 
     if (instance) {
         return instance;

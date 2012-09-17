@@ -1,5 +1,5 @@
 //
-//  ACTiledScrollViewController.h
+//  ACTiledScrollView.h
 //  TiledScrollingView
 //
 //  Created by Francisco Gindre on 9/15/12.
@@ -26,6 +26,15 @@
 //
 #import <UIKit/UIKit.h>
 
+
+typedef struct _tileIndex {
+    NSUInteger row;
+    NSUInteger col;
+} ACTileIndex;
+
+
+ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col);
+
 @protocol TiledViewProtocol <NSObject>
 
 -(CGSize)sizeInTiles;
@@ -33,19 +42,17 @@
 -(UIView*) tileView;
 -(void)setTileSize:(CGSize)tileSize;
 -(void)setSizeInTiles:(CGSize)sizeInTiles;
--(NSUInteger)tileIndex;
--(void)setTileIndex:(NSUInteger)index;
+-(ACTileIndex)tileIndex;
+-(void)setTileIndex:(ACTileIndex)index;
 
 @end
 
-typedef struct _tileIndex {
-    NSUInteger row;
-    NSUInteger col;
-} ACTileIndex;
+
 
 @protocol TiledViewDatasourceProtocol <NSObject>
 
 -(id<TiledViewProtocol>)tileAtIndex:(ACTileIndex)index;
+-(void)willRemove:(id<TiledViewProtocol>)tile atIndex:(ACTileIndex)index;
 
 
 
@@ -65,8 +72,8 @@ typedef struct _tileIndex {
 @property (nonatomic, setter = setMinHeight:) NSUInteger minHeight;
 @property (nonatomic, setter = setVerticalTiles:) NSUInteger verticalTiles;
 @property (nonatomic, setter = setHorizontalTiles:) NSUInteger horizontalTiles;
-@property (nonatomic, readonly, setter = setOrigin:) CGPoint origin;
-@property (nonatomic, readonly, getter = frame) CGRect frame;
+@property (nonatomic, readonly) CGPoint origin;
+
 
 -(id)initWithTileSize:(CGSize)tileSize height:(NSUInteger)vTiles width:(NSUInteger)hTiles;
 
@@ -82,6 +89,12 @@ typedef struct _tileIndex {
 
 -(void)verticalTiles:(NSUInteger)vTiles;
 
+
+/**
+ adds a tile to the view into beginning at the desired tile. If it does not fit in it will be added with a best fit criteria
+ */
+
+-(void)addTile:(id<TiledViewProtocol>)tile at:(ACTileIndex)index;
 
 /**
  adds a tile to the view to the tail of the content with best fit criteria
