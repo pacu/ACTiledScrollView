@@ -27,7 +27,9 @@
 #import "ACTiledScrollView.h"
 #import "ACTilePlaceholder.h"
 #import "ACCGSizeComparator.h"
-
+#import "ACTiledScrollView_Private.h"
+#pragma mark -
+#pragma mark functions
 
 ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
     
@@ -36,6 +38,34 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
     idx.col = col;
     return idx;
 }
+
+
+
+ACTileIndex tileIndexFromIndex(NSUInteger index, NSUInteger rows) {
+    
+    NSUInteger row, col;
+    col = index/rows;
+    row = index%rows;
+    ACTileIndex tileIndex;
+    tileIndex.col = col;
+    tileIndex.row = row;
+    
+    return tileIndex;
+    
+}
+
+NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
+    
+    NSUInteger columnOffset = index.col *rows;
+    NSUInteger position = columnOffset + index.row;
+    
+    return position;
+    
+}
+#pragma mark -
+#pragma mark implementation
+
+
 @implementation ACTiledScrollView
 
 #pragma  mark properties
@@ -103,6 +133,28 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
     }
 }
 
+
+-(CGSize)sizeInTiles {
+    return CGSizeMake(_hTiles, _vTiles);
+}
+
+-(CGPoint)origin {
+    return [self frame].origin;
+}
+
+//-(void)setFrame:(CGRect)frame{
+//
+//
+//    [super setFrame:newFrame];
+//
+//}
+
+
+-(CGSize)sizeThatFits:(CGSize)size {
+    
+    return CGSizeMake(_hTiles * _tileSize.width, _vTiles * _tileSize.height);
+}
+
 #pragma mark getters and setters
 
 -(void)setHorizontalTiles:(NSUInteger)hTiles {
@@ -138,24 +190,7 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
     [self rearrange];
 }
 
-
-
--(CGPoint)origin {
-    return [self frame].origin;
-}
-
-//-(void)setFrame:(CGRect)frame{
-//    
-//    
-//    [super setFrame:newFrame];
-//    
-//}
-
-
--(CGSize)sizeThatFits:(CGSize)size {
-    
-    return CGSizeMake(_hTiles * _tileSize.width, _vTiles * _tileSize.height);
-}
+#pragma mark -
 #pragma mark tile mgmt
 /**
  adds a tile to the view into beginning at the desired tile. If it does not fit in it will be added with a best fit criteria
@@ -164,24 +199,24 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
 -(void)addTile:(id<TiledViewProtocol>)tile at:(ACTileIndex)index {
     
     // check if size matches
-    BOOL sizeMatches = [self isTileCompatible:tile];
-    
-    if (!sizeMatches) {
-        
-        @throw [NSException exceptionWithName:@"InvalidTileSize"
-                                       reason:[NSString stringWithFormat:@"TileSize %@ does not match this tilesize %@",
-                                               NSStringFromCGSize([tile tileSize]),
-                                               NSStringFromCGSize(_tileSize)]
-                                     userInfo:nil];
-    }
-    BOOL sizeCouldFitAtIndex = [self tile:tile fitsIn:index];
-    
-    if (sizeCouldFitAtIndex) {
-        
-        NSIndexSet *indexSet = [self indexesForTile:tile at:index];
-        
-        
-    }
+//    BOOL sizeMatches = [self isTileCompatible:tile];
+//    
+//    if (!sizeMatches) {
+//        
+//        @throw [NSException exceptionWithName:@"InvalidTileSize"
+//                                       reason:[NSString stringWithFormat:@"TileSize %@ does not match this tilesize %@",
+//                                               NSStringFromCGSize([tile tileSize]),
+//                                               NSStringFromCGSize(_tileSize)]
+//                                     userInfo:nil];
+//    }
+//    BOOL sizeCouldFitAtIndex = [self tile:tile fitsIn:index];
+//    
+//    if (sizeCouldFitAtIndex) {
+//        
+//        NSIndexSet *indexSet = [self indexesForTile:tile at:index];
+//        
+//        
+//    }
     
 
 
@@ -218,12 +253,6 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
     
 }
 
-
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
 /**
  returns all the tiles in this tiled view
  */
@@ -232,14 +261,15 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
     return [self subviews];
 }
 
-
+#pragma mark -
+#pragma mark indexSet handling methods
 /**
  returns the indexes that, theoretically speaking, this tile could use. Returns nil if the tile can't be inserted in this scrollview.
  */
 
 -(NSIndexSet*)indexesForTile:(id<TiledViewProtocol>)tile at:(ACTileIndex)position {
     
-    if ([self tile:tile fitsIn:position]){
+    if (![self tile:tile fitsIn:position]){
         return nil;
     }
     NSMutableIndexSet *set = [[[NSMutableIndexSet alloc] init] autorelease];
@@ -259,19 +289,26 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
     
 }
 
+/**
+ returns the indexes that, theoretically speaking, this tile could use. Returns nil if the tile can't be inserted in this scrollview.
+ */
 -(NSIndexSet*)indexesForTile:(id<TiledViewProtocol>)tile atPosition:(NSUInteger)position {
-    NSInteger row, col;
-    col = position/_vTiles;
-    row = position%_vTiles;
-    ACTileIndex index;
-    index.col = col;
-    index.row = row;
-    
+
+    ACTileIndex index = tileIndexFromIndex(position, _vTiles);
     return [self indexesForTile:tile at:index];
 }
+
+
+
+#pragma  mark -
+#pragma mark Tile Verification methods
+/**
+ checks compatibility between the given tile and this instance of ACTiledScrollView
+ */
+
 -(BOOL)isTileCompatible:(id<TiledViewProtocol>)tile {
     
-    return [ACCGSizeComparator compareSize:[tile tileSize] to:_tileSize] == NSOrderedSame;
+    return !CGSizeEqualToSize([tile tileSize], CGSizeZero) && CGSizeEqualToSize([tile tileSize], _tileSize);
 }
 
 /**
@@ -279,10 +316,10 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
  */
 -(BOOL)tile:(id<TiledViewProtocol>)tile fitsIn:(ACTileIndex)index{
     
-    BOOL couldFit = [ACCGSizeComparator compareSize:[tile sizeInTiles] to:CGSizeMake(_hTiles, _minHeight)] == NSOrderedSame;
+    BOOL couldFit = [ACCGSizeComparator compareSize:[tile sizeInTiles] to:CGSizeMake(_hTiles, _minHeight)] != NSOrderedDescending;
     
-    if (!couldFit && [self isTileCompatible:tile])
-        return couldFit;
+    if (!couldFit || ![self isTileCompatible:tile])
+        return NO;
          
     NSUInteger row, col;
     row = index.row;
@@ -291,27 +328,59 @@ ACTileIndex ACTileIndexMake(NSUInteger row, NSUInteger col) {
     BOOL fitsVertically = (_vTiles-row) >= [tile sizeInTiles].height;
     
     if (!fitsVertically)
-        return false;
+        return NO;
     
     BOOL fitsHorizontally = (_hTiles - col) >= [tile sizeInTiles].width;
     
     if (!fitsHorizontally) {
-        return false;
+        return NO;
     }
-    return true;
+    return YES;
 }
 
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-}
 
 #pragma mark convience methods
 
+/*  
+ resizes the tile array to fit the given indexSet. if indexset is within bounds returns the
+ received array. If otherwise the array will be copied to a new instance  that can fit the 
+ lastIndex of the indexSet filling the array with NSNull
+ */
+
 -(NSMutableArray*)resizeArray:(NSMutableArray*)array ToFitIndexSet:(NSIndexSet*)indexSet {
+    // if the array can fit this index set, then return the same array
+    if ([array count] >= [indexSet lastIndex])
+        return  array;
+    
+    NSUInteger capacity = [indexSet lastIndex];
+    NSMutableArray *newArray = [NSMutableArray arrayWithCapacity:capacity];
+    
+    [newArray addObjectsFromArray:array];
+    NSNull *nullObject = [NSNull null];
+    
+    // fill the array with null objects
+    for (NSUInteger idx = [array count]; idx < capacity ; idx++) {
+        [newArray addObject:nullObject];
+    }
     
     
-    return nil;
+    return newArray;
+    
+    
+}
+
+-(NSMutableArray*)tileArray {
+    
+    return _tiles;
+}
+
+
+
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate methods
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
 }
 @end

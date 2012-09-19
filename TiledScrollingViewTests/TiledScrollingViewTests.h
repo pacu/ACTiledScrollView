@@ -35,15 +35,14 @@
     CGSize _tileSize;
 }
 
--(void)testInitWithTileSizeTest;
--(void)testSetVerticalTilesTest;
--(void)testSetHorizontalTilesTest;
--(void)testAppendTileTest;
--(void)testRemoveTileTest;
--(void)testAllTilesTest;
--(void)testIndexesForTileAtTest;
--(void)testIndexesForTileAtPositionTest;
--(void)testIsTileCompatibleTest;
--(void)testTileFitsInTest;
+-(void)testInitWithTileSize;
+-(void)testSetVerticalTiles;
+-(void)testSetHorizontalTiles;
+-(void)testAppendTile;
+-(void)testRemoveTile;
+-(void)testIndexesForTileAt;
+-(void)testIndexesForTileAtPosition;
+-(void)testIsTileCompatible;
+-(void)testTileFitsIn;
 -(void)testResizeArrayToFitIndexSet;
 @end

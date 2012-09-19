@@ -5,25 +5,7 @@
 //  Created by Francisco Gindre on 9/15/12.
 //  Copyright (c) 2012 AppCrafter.biz. All rights reserved.
 //
-// MIT License
-//Permission is hereby granted, free of charge, to any person obtaining
-//a copy of this software and associated documentation files (the "Software"),
-//to deal in the Software without restriction, including without limitation
-//the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//and/or sell copies of the Software, and to permit persons to whom the
-//Software is furnished to do so, subject to the following conditions:
-//
-//The above copyright notice and this permission notice shall be included
-//in all copies or substantial portions of the Software.
-//
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-//OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//THE SOFTWARE.
-//
+
 #import "TiledScrollingViewTests.h"
 #import "ACTilePlaceholder.h"
 #import "ACTileView.h"
@@ -45,12 +27,13 @@
 {
     // Tear-down code here.
     
-    [super tearDown];
+   
     [_scrollview autorelease];
     _scrollview =nil;
+     [super tearDown];
 }
 
-- (void)testExample
+- (void)testIsPlaceholder
 {
     NSObject *obj = [[[NSObject alloc]init] autorelease];
     
@@ -62,7 +45,7 @@
 }
 
 
--(void)testInitWithTileSizeTest{
+-(void)testInitWithTileSize{
     CGSize size;
     size.width = 256;
     size.height = 192;
@@ -77,7 +60,7 @@
     NSAssert2(CGSizeEqualToSize(_scroll.frame.size,expected), @"Sizes are not equal actual %@  expected:%@", NSStringFromCGSize(_scroll.frame.size), NSStringFromCGSize(expected));
     
 }
--(void)testSetVerticalTilesTest{
+-(void)testSetVerticalTiles{
     
     [_scrollview setVerticalTiles:4];
     CGSize expected = CGSizeMake(_scrollview.frame.size.width, _tileSize.height *4);
@@ -86,17 +69,140 @@
 
     
 }
--(void)testSetHorizontalTilesTest{
+-(void)testSetHorizontalTiles{
     [_scrollview setHorizontalTiles:3];
     
     CGSize expected = CGSizeMake(_tileSize.width *3, _scrollview.frame.size.height);
     NSAssert2(CGSizeEqualToSize(_scrollview.frame.size , expected), @"Sizes are not equal actual %@  expected:%@", NSStringFromCGSize(_scrollview.frame.size), NSStringFromCGSize(expected));
 }
 
--(void)testAppendTileTest{}
--(void)testRemoveTileTest{}
--(void)testAllTilesTest{}
--(void)testIndexesForTileAtTest{
+-(void)testAppend1x1TileToEmptyView{
+    
+    ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    
+    // append 1x1to view that has zero elements
+    [_scrollview appendTile:view];
+    CGRect expected = CGRectMake(0,0,view.frame.size.width,view.frame.size.height);
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appeding 1x1 tile to empty view, rect should be: %@. Actual frame:%@",expected, view.frame);
+    
+
+}
+
+-(void)testAppend2x2TileToEmptyView{
+    ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(2, 2)];
+    
+    // append 1x1to view that has zero elements
+    [_scrollview appendTile:view];
+    CGRect expected = CGRectMake(0,0,view.frame.size.width,view.frame.size.height);
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appeding 1x1 tile to empty view, rect should be: %@. Actual frame:%@",expected, view.frame);
+    
+}
+
+
+-(void)testAppendTile {
+    
+    // add 2x2 tile to empty view.
+    [self testAppend2x2TileToEmptyView];
+    
+    ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    
+    
+    // then add a 1x1 tile, it should be if the height is 3, below the 2x2 tile initially inserted.
+    [_scrollview appendTile:view];
+    
+    
+    CGRect expected = CGRectMake(0,_tileSize.height*2,view.frame.size.width,view.frame.size.height);
+    
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending the second 1x1 tile to this view, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
+
+    
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    
+    // then add a 1x1 tile, it should be if the height is 3, next to the last tile inserted completing a 3x2 tile grid
+    [_scrollview appendTile:view];
+    
+    
+    expected =  CGRectMake(_tileSize.width,_tileSize.height*2,view.frame.size.width,view.frame.size.height);
+    
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a third 1x1 tile to this view,, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
+    
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    
+    // then add a 1x1 tile, it should be, if the height is 3, next to the 2x2 tile inserted on row zero
+    [_scrollview appendTile:view];
+    
+    
+    expected =  CGRectMake(_tileSize.width*2,0,view.frame.size.width,view.frame.size.height);
+    
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a fourth 1x1 tile to this view,, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
+    
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    
+    // then add a 1x1 tile, it should be, if the height is 3, next to the 2x2 tile inserted on one.
+    [_scrollview appendTile:view];
+    
+    
+    expected =  CGRectMake(_tileSize.width*2,_tileSize.width,view.frame.size.width,view.frame.size.height);
+    
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a fifth 1x1 tile to this view,, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
+    
+    
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    
+    // then add a 1x1 tile, it should be, if the height is 3, next to the third tile inserted on row 2, column 2 completing a 9x9 tile grid
+    [_scrollview appendTile:view];
+    
+    
+    expected =  CGRectMake(_tileSize.width*2,_tileSize.width*2,view.frame.size.width,view.frame.size.height);
+    
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a sixth 1x1 tile to this view,, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
+    
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(2, 2)];
+    
+    // then add a 2x2 tile, if the height is 3 on row 0, column 3. And content size should be
+    // Height: _tileSize.height * _scrollview.sizeInTiles.height
+    // width: the maximum reach of any of the tiles. When a tile is added the content size should be checked and updated.
+    [_scrollview appendTile:view];
+    
+    
+    expected =  CGRectMake(_tileSize.width*3,0,view.frame.size.width,view.frame.size.height);
+    
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a seventh 1x1 tile to this view, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
+    
+    // check if size is correct when adding a tile to the view
+    CGSize size;
+    
+    size = [_scrollview contentSize];
+    
+    
+    CGSize expectedSize = CGSizeMake(expected.origin.x+expected.size.width, _scrollview.frame.size.height);
+    STAssertTrue(CGSizeEqualToSize(expectedSize,size),@"size should be the maximum reach of any of the tiles and the current height: %@ actual size: %@", NSStringFromCGSize(expectedSize),NSStringFromCGSize(size));
+}
+-(void)testRemoveTileTest{
+    STFail(@"Not yet Implemented");
+
+}
+
+-(void)testIndexesForTileAt{
 
     ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
     
@@ -168,18 +274,118 @@
       
     STAssertTrue([indexSet isEqualToIndexSet:expectedSet], @"index set should be %@ when tile is 2x3 and tile index 0,0 Actual:%@",expStr,idxStr);
 }
--(void)testIndexesForTileAtPositionTest{}
--(void)testIsTileCompatibleTest{}
+-(void)testIndexesForTileAtPosition{
+    
+    ACTileView *invalidView = [[[ACTileView alloc] initWithFrame:CGRectZero] autorelease];
+    
+    STAssertNil([_scrollview indexesForTile:invalidView atPosition:0], @"CGSizeZero tile should return nil");
+    
+    [invalidView setTileSize:CGSizeMake(234, 223)];
+    STAssertNil([_scrollview indexesForTile:invalidView atPosition:0], @"incompatible tile should return nil");
+    
+    invalidView = [[[ACTileView alloc] initWithFrame:CGRectZero]autorelease];
+    
+    [invalidView setTileSize:_tileSize];
+    
+    [invalidView setSizeInTiles:CGSizeMake(32, 22)];
+    
+    STAssertNil([_scrollview indexesForTile:invalidView atPosition:0], @"incompatible tile should return nil");
+    
+    ACTileView *validView = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [validView setTileSize:_tileSize];
+    [validView setSizeInTiles:CGSizeMake(2, 1)];
+    
+    STAssertNotNil([_scrollview indexesForTile:validView atPosition:4],@"valid tile could have been inserted in valid position");
+    
+    
+
+}
+-(void)testIsTileCompatible
+{
+
+    // tile is compatible if  CGSizeZero and it's not the same size than receiver's tileSize
+    
+    ACTileView *invalidView = [[[ACTileView alloc]initWithFrame:CGRectZero]autorelease];
+    
+    STAssertFalse([_scrollview isTileCompatible:invalidView],@"View should be invalid %@",invalidView);
+    
+    [invalidView setTileSize:CGSizeMake(123, 11)];
+    
+    STAssertFalse([_scrollview isTileCompatible:invalidView],@"View should be invalid %@",invalidView);
+    
+    // check if returns true with adecquate size
+    
+    
+    ACTileView *validView = [[[ACTileView alloc]initWithFrame:CGRectZero]autorelease];
+    
+    [validView setTileSize:_tileSize];
+    
+    STAssertTrue([_scrollview isTileCompatible:validView], @"view should be compatible %@",validView);
+    
+
+}
 
 
--(void)testTileFitsInTest{
+-(void)testTileFitsIn{
     ACTileView *invalidView = [[[ACTileView alloc] initWithFrame:CGRectZero]autorelease];
     ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
     
+    [invalidView setTileSize:_tileSize];
+    [invalidView setSizeInTiles:CGSizeMake(5, 2)];
     
+    STAssertFalse([_scrollview tile:invalidView fitsIn:ACTileIndexMake(0, 0)], @"Tile of size %@ should not fit in size:%@",NSStringFromCGSize([invalidView sizeInTiles]),NSStringFromCGSize([_scrollview sizeInTiles]));
+    
+    [invalidView setSizeInTiles:CGSizeMake(1, 5)];
+    STAssertFalse([_scrollview tile:invalidView fitsIn:ACTileIndexMake(0, 0)], @"Tile of size %@ should not fit in size:%@",NSStringFromCGSize([invalidView sizeInTiles]),NSStringFromCGSize([_scrollview sizeInTiles]));
+    
+    // test a valid view. in a ACTiledScrollView of 3x4 tiles put a 2x2 at 0,0
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(2, 2)];
+
+      STAssertTrue([_scrollview tile:view fitsIn:ACTileIndexMake(0, 0)], @"Tile of size %@ should not fit in size:%@",NSStringFromCGSize([view sizeInTiles]),NSStringFromCGSize([_scrollview sizeInTiles]));
 }
--(void)testResizeArrayToFitIndexSet{}
--(void)testAddTileAt{
+-(void)testResizeArrayToFitIndexSet{
+
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:12];
+    
+    for (NSUInteger idx; idx<12; idx++) {
+        [array addObject:[NSNull null]];
+    }
+    // pass an index set that makes the method return the same instance
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    
+    [indexSet addIndex:7];
+    [indexSet addIndex:8];
+    [indexSet addIndex:10];
+    [indexSet addIndex:11];
+    
+    NSMutableArray *sameArray = [_scrollview resizeArray:array ToFitIndexSet:indexSet];
+    
+    STAssertTrue(array == sameArray, @"arrays should be the same expected: %@, actual: %@", array,sameArray);
+    
+    
+    // extend the array to fit a 2x3 tile  at index 1,3
+    
+    
+    indexSet = [NSMutableIndexSet indexSetWithIndex:10];
+    [indexSet addIndex:11];
+    [indexSet addIndex:13];
+    [indexSet addIndex:14];
+    [indexSet addIndex:16];
+    [indexSet addIndex:17];
+    
+    
+    NSMutableArray *newArray = [_scrollview resizeArray:array ToFitIndexSet:indexSet];
+    
+    STAssertNotNil(newArray, @"the array should not be nil");
+    
+    STAssertTrue([newArray count]>= [indexSet lastIndex],@"new array item count should be >= the last index in the set. count: %d  lastIndex: %d",[newArray count], [indexSet lastIndex]);
+    
+
+}
+-(void)testAdd1x1TileAtEmptyView{
     
     
     ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
@@ -193,7 +399,160 @@
     
     
     STAssertThrows([_scrollview addTile:invalidView at:ACTileIndexMake(0, 0)] , @"exception not thrown when incompatible view was added");
+     
+    [_scrollview addTile:view at:ACTileIndexMake(0, 0)];
+    
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(0, 0, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0, 0, _tileSize.width,_tileSize.height)));
+    
+    [_scrollview addTile:view at:ACTileIndexMake(0, 1)];
+    
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(_tileSize.width, 0, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(_tileSize.width, 0, _tileSize.width,_tileSize.height)));
+    
+    [_scrollview addTile:view at:ACTileIndexMake(1, 0)];
+    
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(0, _tileSize.height, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0,_tileSize.height, _tileSize.width,_tileSize.height)));
+    
+    [_scrollview addTile:view at:ACTileIndexMake(1, 1)];
+    
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(_tileSize.width, _tileSize.height, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0,_tileSize.height, _tileSize.width,_tileSize.height)));
+
+}
+
+-(void)testAdd2x2TileAtEmptyView{
+    ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(2, 2)];
+    NSAssert2(CGSizeEqualToSize(view.frame.size, _tileSize), @"Sizes are not equal actual %@  expected:%@", NSStringFromCGSize(view.frame.size), NSStringFromCGSize(view.frame.size));
+    
+    
+    ACTileView *invalidView = [[[ACTileView alloc] initWithFrame:CGRectZero]autorelease];
+    
+    
+    STAssertThrows([_scrollview addTile:invalidView at:ACTileIndexMake(0, 0)] , @"exception not thrown when incompatible view was added");
+    
+    [_scrollview addTile:view at:ACTileIndexMake(0, 0)];
+    
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(0, 0, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0, 0, _tileSize.width,_tileSize.height)));
+    
+    [_scrollview addTile:view at:ACTileIndexMake(0, 1)];
+    
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(_tileSize.width, 0, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(_tileSize.width, 0, _tileSize.width,_tileSize.height)));
+    
+    [_scrollview addTile:view at:ACTileIndexMake(1, 0)];
+    
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(0, _tileSize.height, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0,_tileSize.height, _tileSize.width,_tileSize.height)));
+    
+    [_scrollview addTile:view at:ACTileIndexMake(1, 1)];
+    
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(_tileSize.width, _tileSize.height, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0,_tileSize.height, _tileSize.width,_tileSize.height)));
     
     
 }
+
+/** 
+ Make an array that has [2x2Tile,ph, 1x1Tile, ph, ph, NSNull,1x1Tile,NSNull,NSNull,NSNull,NSNull,NSNull] and test best fit for it. it should add the tile to index 5
+ */
+-(void)testBestFit1x1Tile {
+    
+    
+    NSMutableArray *array = [[[NSMutableArray alloc]initWithCapacity:12] autorelease];
+    
+    for (NSUInteger i=0; i<12; i++) {
+        [array addObject:[NSNull null]];
+    }
+    ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(2, 2)];
+    
+    [array replaceObjectAtIndex:0 withObject:view];
+    
+    [array replaceObjectAtIndex:1 withObject:[ACTilePlaceholder sharedPlaceholder]];
+
+    // 1x1 tile
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    [array replaceObjectAtIndex:2 withObject:view];
+    
+    [array replaceObjectAtIndex:3 withObject:[ACTilePlaceholder sharedPlaceholder]];
+    [array replaceObjectAtIndex:4 withObject:[ACTilePlaceholder sharedPlaceholder]];
+    
+    //another 1x1 tile
+    // 1x1 tile
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    [array replaceObjectAtIndex:6 withObject:view];
+
+    [_scrollview setTileArray:array];
+    
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    [_scrollview addTile:view at:ACTileIndexMake(0, 0)];
+    
+    NSMutableArray *newArray = [_scrollview tileArray];
+    
+    STAssertEqualObjects([newArray objectAtIndex:5], view, @"BestFit algorithm did not place the tile object %@ at index 5 as expected",view);
+    
+
+    
+}
+
+/**
+ Make an array that has [1x1Tile,NSNull,1x1Tile, NSNull, NSNull, 1x1Tile,NSNull,NSNull,1x1Tile,NSNull,NSNull,NSNull] and test best fit for it. it should add the tile to index 5
+ */
+-(void)testBestFit2x2Tile {
+    NSMutableArray *array = [[[NSMutableArray alloc]initWithCapacity:12] autorelease];
+    
+    for (NSUInteger i=0; i<12; i++) {
+        [array addObject:[NSNull null]];
+    }
+    ACTileView *view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    
+    [array replaceObjectAtIndex:0 withObject:view];
+    
+
+    
+    // 1x1 tile
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    [array replaceObjectAtIndex:2 withObject:view];
+    
+    
+    //another 1x1 tile
+    // 1x1 tile
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(1, 1)];
+    [array replaceObjectAtIndex:5 withObject:view];
+    
+    [_scrollview setTileArray:array];
+    
+    view = [[[ACTileView alloc]initWithFrame:CGRectZero] autorelease];
+    
+    [view setTileSize:_tileSize];
+    [view setSizeInTiles:CGSizeMake(2, 2)];
+    [_scrollview addTile:view at:ACTileIndexMake(0, 0)];
+    
+    NSMutableArray *newArray = [_scrollview tileArray];
+    
+    STAssertEqualObjects([newArray objectAtIndex:3], view, @"BestFit algorithm did not place the tile object %@ at index 3 as expected",view);
+    
+    
+}
+
+
+
 @end
