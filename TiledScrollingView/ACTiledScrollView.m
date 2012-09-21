@@ -79,7 +79,7 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
 -(id)initWithFrame:(CGRect)frame {
     
     self = [super initWithFrame:frame];
-
+    
     return self;
 }
 -(id)initWithTileSize:(CGSize)tileSize height:(NSUInteger)vTiles width:(NSUInteger)hTiles {
@@ -96,14 +96,18 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
         _vTiles = vTiles;
         _hTiles = hTiles;
         _tileSize = tileSize;
+        
+        [self setContentSize:rect.size];
         NSUInteger capacity = (vTiles*hTiles);
         NSNull *nullObject = [NSNull null];
         _tiles = [[NSMutableArray alloc] initWithCapacity:capacity];
+        
         for (int i = 0; i<capacity; i++) {
             
             [_tiles addObject:nullObject];
         }
-               
+        _reuseDictionary = [[NSMutableDictionary alloc]initWithCapacity:10];
+        
     }
     return self;
     
@@ -111,12 +115,20 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
 
 -(void)dealloc {
     
+    
     [_tiles release];
+    _tiles = nil;
+    [_reuseDictionary release];
+    _reuseDictionary = nil;
     [super dealloc];
 }
 
 
-
+-(void)didReceiveMemoryWarning {
+    
+    [_reuseDictionary release];
+    _reuseDictionary = [[NSMutableDictionary alloc] initWithCapacity:5];
+}
 
 
 #pragma view layout methods
@@ -193,40 +205,143 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
 #pragma mark -
 #pragma mark tile mgmt
 /**
- adds a tile to the view into beginning at the desired tile. If it does not fit in it will be added with a best fit criteria
+ adds a tile to the view beginning at the desired tile. If it does not fit in it will be added with a best fit criteria
  */
 
 -(void)addTile:(id<TiledViewProtocol>)tile at:(ACTileIndex)index {
     
     // check if size matches
-//    BOOL sizeMatches = [self isTileCompatible:tile];
-//    
-//    if (!sizeMatches) {
-//        
-//        @throw [NSException exceptionWithName:@"InvalidTileSize"
-//                                       reason:[NSString stringWithFormat:@"TileSize %@ does not match this tilesize %@",
-//                                               NSStringFromCGSize([tile tileSize]),
-//                                               NSStringFromCGSize(_tileSize)]
-//                                     userInfo:nil];
-//    }
-//    BOOL sizeCouldFitAtIndex = [self tile:tile fitsIn:index];
-//    
-//    if (sizeCouldFitAtIndex) {
-//        
-//        NSIndexSet *indexSet = [self indexesForTile:tile at:index];
-//        
-//        
-//    }
+    BOOL sizeMatches = [self isTileCompatible:tile];
+    
+    if (!sizeMatches) {
+        
+        @throw [NSException exceptionWithName:@"InvalidTileSize"
+                                       reason:[NSString stringWithFormat:@"TileSize %@ does not match this tilesize %@",
+                                               NSStringFromCGSize([tile tileSize]),
+                                               NSStringFromCGSize(_tileSize)]
+                                     userInfo:nil];
+    }
+    BOOL sizeCouldFitAtIndex = [self tile:tile fitsIn:index];
+    
+    if (sizeCouldFitAtIndex) {
+        
+        NSIndexSet *indexSet = [self indexesForTile:tile at:index];
+        
+        [self isIndexSetAvailable:indexSet];
+    }
     
 
 
+}
+
+-(void)addTile:(id<TiledViewProtocol>)tile withBestFitCriteriaFromIndex:(NSUInteger)index {
+    NSUInteger idx =index;
+    NSIndexSet *indexSet;
+    BOOL foundIndex = NO;
+    do {
+        NSRange range;
+        range.location =idx;
+        range.length = [_tiles count]-idx;
+        idx = [_tiles indexOfObjectIdenticalTo:[NSNull null] inRange:range];
+        
+        if (idx != NSNotFound) {
+            
+            BOOL tileFits = [self tile:tile fitsIn:tileIndexFromIndex(idx, _vTiles)];
+            indexSet = [self indexesForTile:tile atPosition:idx];
+            BOOL tileSizeAvailable = [self isIndexSetAvailable:indexSet];
+            
+            if (tileFits && tileSizeAvailable)
+                foundIndex = YES;
+        }
+        
+        
+    }while (!foundIndex && idx != NSNotFound);
+    
+    if (!foundIndex)
+        [self appendTile:tile];
+    else {
+        indexSet = [self indexesForTile:tile atPosition:idx];
+        
+        [self addTile:tile withIndexSet:indexSet];
+    }
+}
+/**
+ adds the tile to the view. Assumes the tile is compatible and that there is room for it.
+ */
+-(void)addTile:(id<TiledViewProtocol>)tile withIndexSet:(NSIndexSet*)indexSet {
+    
+    [_tiles replaceObjectAtIndex:[indexSet firstIndex] withObject:tile];
+    [indexSet enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
+        
+        if (idx ==[indexSet firstIndex]) {
+            *stop = YES;
+        }else {
+            [_tiles replaceObjectAtIndex:idx withObject:[ACTilePlaceholder sharedPlaceholder]];
+        }
+        
+    }];
+    
+    CGRect frame = [self frameForTile:tile at:[indexSet firstIndex]];
+    [[tile tileView] setFrame:frame];
+    
+    [self addSubview:[tile tileView]];
+    
+    // readjust content size
+    CGFloat newOffset = (frame.origin.x + frame.size.width);
+    if (newOffset > self.contentSize.width) {
+        
+        CGSize newContentSize = CGSizeMake(newOffset, self.frame.size.height);
+        [self setContentSize:newContentSize];
+    }
+    
 }
 
 /**
  adds a tile to the view to the tail of the content with best fit criteria
  */
 
--(void)appendTile:(id<TiledViewProtocol>)tile {}
+-(void)appendTile:(id<TiledViewProtocol>)tile {
+
+    NSNull *nullObject = [NSNull null];
+    NSInteger idx;
+    for (idx = [_tiles count]-1; idx >= 0; idx--) {
+        
+        if ([_tiles objectAtIndex:idx] != nullObject) {
+            
+
+            break;
+        }
+        
+    }
+    ACTileIndex possibleIndex = tileIndexFromIndex(idx +1 , _vTiles);
+    
+    BOOL tileFits = [self tile:tile fitsIn:possibleIndex];
+    
+    if (!tileFits) {
+        
+        @throw [NSException exceptionWithName:@"InvalidTileSize"
+                                       reason:[NSString stringWithFormat:@"TileSize %@ does not match this tilesize %@",
+                                               NSStringFromCGSize([tile tileSize]),
+                                               NSStringFromCGSize(_tileSize)]
+                                     userInfo:nil];
+    }
+    
+    NSIndexSet *possibleIndexSet = [self indexesForTile:tile at:possibleIndex];
+    
+    // if necessary expand the tiles array
+    if ([possibleIndexSet lastIndex] >= [_tiles count]) {
+        
+        [_tiles autorelease];
+        _tiles = [[self resizeArray:_tiles ToFitIndexSet:possibleIndexSet] retain];
+        
+    }
+    
+    [self addTile:tile withIndexSet:possibleIndexSet];
+    
+    
+    
+
+}
 
 /**
  removes the desired tile from the view using the supplied block to compare the view;
@@ -299,6 +414,24 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
 }
 
 
+/**
+ checks if the indices of the indexSet point to positions of the _tiles Array that are available (with NSNull) 
+ */
+
+-(BOOL)isIndexSetAvailable:(NSIndexSet*)indexSet {
+    
+    __block BOOL isAvailable = YES;
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        
+        isAvailable = [_tiles objectAtIndex:idx] == [NSNull null];
+        
+        if (!isAvailable){
+            *stop = YES;
+        }
+    }];
+    return isAvailable;
+    
+}
 
 #pragma  mark -
 #pragma mark Tile Verification methods
@@ -370,17 +503,93 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     
 }
 
--(NSMutableArray*)tileArray {
+/**
+ 
+ returns the tile size and origin to place that (assumed compatible) tile to this ACTileView 
+ */
+-(CGRect)frameForTile:(id<TiledViewProtocol>)tile atIndex:(ACTileIndex)index {
     
-    return _tiles;
+    CGRect rect = CGRectMake(_tileSize.width *index.col, _tileSize.height * index.row, [tile sizeInTiles].width * _tileSize.width, [tile sizeInTiles].height  * _tileSize.height);
+    
+    
+    return rect;
 }
 
 
+-(CGRect)frameForTile:(id<TiledViewProtocol>)tile at:(NSUInteger)index {
+    
+    ACTileIndex idx = tileIndexFromIndex(index, _vTiles);
+    
+    return [self frameForTile:tile atIndex:idx];
+}
 
+#pragma mark - 
+#pragma mark cell reuse
+-(id<TiledViewProtocol>)dequeueReusableCellWithIdentifier:(NSString *)reuseIdentifier {
+    
+  	NSMutableSet *cells = [_reuseDictionary objectForKey: reuseIdentifier];
+	id<TiledViewProtocol> cell = (id<TiledViewProtocol>)[cells anyObject];
+	if ( cell == nil )
+		return ( nil );
+    
+	[cell prepareForReuse];
+    
+	[cells removeObject: cell];
+	return ( cell );
+}
+
+-(void)enqueueReusableCells:(NSArray*) reusableTiles {
+    for ( id<TiledViewProtocol> tile in reusableTiles )
+	{
+		NSMutableSet * reuseSet = [_reuseDictionary objectForKey: [tile reuseIdentifier]];
+		if ( reuseSet == nil )
+		{
+			reuseSet = [[NSMutableSet alloc] initWithCapacity: 32];
+			[_reuseDictionary setObject: reuseSet forKey: [tile reuseIdentifier]];
+		}
+		else if ( [reuseSet member: tile] == tile )
+		{
+			NSLog( @"Warning: tried to add duplicate tile" );
+			continue;
+		}
+        
+		[reuseSet addObject: tile];
+	}
+}
 
 #pragma mark -
 #pragma mark UIScrollViewDelegate methods
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
 }
+
+
+@end
+
+
+
+@implementation ACTiledScrollView (TestingHelpers)
+
+/*
+ DO NOT USE THIS METHOD. TESTING PURPOSES ONLY
+ */
+-(void)setTileArray:(NSMutableArray*)array {
+    
+    [_tiles autorelease];
+    _tiles = [array retain];
+    for (UIView *v in [self subviews]) {
+        [v removeFromSuperview];
+    }
+    
+    [self rearrange];
+}
+
+/*
+ DO NOT USE THIS METHOD. TESTING PURPOSES ONLY
+ */
+-(NSMutableArray*)tileArray{
+    
+    return _tiles;
+}
+
 @end

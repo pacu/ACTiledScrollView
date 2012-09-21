@@ -22,7 +22,7 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows);
 
 @protocol TiledViewProtocol <NSObject>
 
-
+@required
 -(CGSize)sizeInTiles;
 -(CGSize)tileSize;
 -(UIView*) tileView;
@@ -30,8 +30,11 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows);
 -(void)setSizeInTiles:(CGSize)sizeInTiles;
 -(ACTileIndex)tileIndex;
 -(void)setTileIndex:(ACTileIndex)index;
+
+@optional
 -(NSString*)reuseIdentifier;
 -(void)setReuseIdentifier:(NSString*)identifier;
+-(void)prepareForReuse;
 @end
 
 
@@ -53,7 +56,7 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows);
     NSUInteger _vTiles;
     NSMutableArray *_tiles;
     NSUInteger _minHeight;
-    NSMutableSet *_reuseSet;
+    NSMutableDictionary *_reuseDictionary;
 
 }
 
@@ -104,7 +107,7 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows);
 -(void)removeTile:(NSUInteger)position;
   
   
--(id)dequeueReusableCellWithIdentifier:(NSString *)identifier;
+-(id<TiledViewProtocol>)dequeueReusableCellWithIdentifier:(NSString *)identifier;
 
 /** 
  returns all the tiles in this tiled view
@@ -112,5 +115,10 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows);
 -(NSArray*)allTiles;
 
 
+/**
+ remove cached objects
+ 
+ */
+-(void)didReceiveMemoryWarning;
 
 @end

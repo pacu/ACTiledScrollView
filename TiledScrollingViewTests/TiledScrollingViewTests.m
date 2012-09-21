@@ -116,11 +116,11 @@
     [view setSizeInTiles:CGSizeMake(1, 1)];
     
     
-    // then add a 1x1 tile, it should be if the height is 3, below the 2x2 tile initially inserted.
+    // then add a 1x1 tile, if the height is 3,it should be on index 2,1
     [_scrollview appendTile:view];
     
     
-    CGRect expected = CGRectMake(0,_tileSize.height*2,view.frame.size.width,view.frame.size.height);
+    CGRect expected = CGRectMake(_tileSize.width,_tileSize.height*2,view.frame.size.width,view.frame.size.height);
     
     STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending the second 1x1 tile to this view, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
 
@@ -129,11 +129,11 @@
     [view setTileSize:_tileSize];
     [view setSizeInTiles:CGSizeMake(1, 1)];
     
-    // then add a 1x1 tile, it should be if the height is 3, next to the last tile inserted completing a 3x2 tile grid
+    // then add a 1x1 tile, if the height is 3,it should be on index 0,2
     [_scrollview appendTile:view];
     
     
-    expected =  CGRectMake(_tileSize.width,_tileSize.height*2,view.frame.size.width,view.frame.size.height);
+    expected =  CGRectMake(_tileSize.width *2 ,0,view.frame.size.width,view.frame.size.height);
     
     STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a third 1x1 tile to this view,, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
     
@@ -141,11 +141,11 @@
     [view setTileSize:_tileSize];
     [view setSizeInTiles:CGSizeMake(1, 1)];
     
-    // then add a 1x1 tile, it should be, if the height is 3, next to the 2x2 tile inserted on row zero
+    // then add a 1x1 tile, if the height is 3,it should be on index 1,2
     [_scrollview appendTile:view];
     
     
-    expected =  CGRectMake(_tileSize.width*2,0,view.frame.size.width,view.frame.size.height);
+    expected =  CGRectMake(_tileSize.width*2,_tileSize.height,view.frame.size.width,view.frame.size.height);
     
     STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a fourth 1x1 tile to this view,, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
     
@@ -153,7 +153,7 @@
     [view setTileSize:_tileSize];
     [view setSizeInTiles:CGSizeMake(1, 1)];
     
-    // then add a 1x1 tile, it should be, if the height is 3, next to the 2x2 tile inserted on one.
+    // then add a 1x1 tile, if the height is 3,it should be on index 2,2
     [_scrollview appendTile:view];
     
     
@@ -166,7 +166,7 @@
     [view setTileSize:_tileSize];
     [view setSizeInTiles:CGSizeMake(1, 1)];
     
-    // then add a 1x1 tile, it should be, if the height is 3, next to the third tile inserted on row 2, column 2 completing a 9x9 tile grid
+    // then add a 1x1 tile, if the height is 3,it should be on index 0,3
     [_scrollview appendTile:view];
     
     
@@ -178,13 +178,13 @@
     [view setTileSize:_tileSize];
     [view setSizeInTiles:CGSizeMake(2, 2)];
     
-    // then add a 2x2 tile, if the height is 3 on row 0, column 3. And content size should be
+    // then add a 2x2 tile, if the height is 3 on row 1, column 3. And content size should be
     // Height: _tileSize.height * _scrollview.sizeInTiles.height
     // width: the maximum reach of any of the tiles. When a tile is added the content size should be checked and updated.
     [_scrollview appendTile:view];
     
     
-    expected =  CGRectMake(_tileSize.width*3,0,view.frame.size.width,view.frame.size.height);
+    expected =  CGRectMake(_tileSize.width*3,_tileSize.height,view.frame.size.width,view.frame.size.height);
     
     STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a seventh 1x1 tile to this view, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
     
@@ -197,8 +197,27 @@
     CGSize expectedSize = CGSizeMake(expected.origin.x+expected.size.width, _scrollview.frame.size.height);
     STAssertTrue(CGSizeEqualToSize(expectedSize,size),@"size should be the maximum reach of any of the tiles and the current height: %@ actual size: %@", NSStringFromCGSize(expectedSize),NSStringFromCGSize(size));
 }
--(void)testRemoveTileTest{
-    STFail(@"Not yet Implemented");
+-(void)testRemoveTile{
+    
+    [self testAppendTile];
+    
+    NSMutableArray *array = [_scrollview tileArray];
+    
+    
+    ACTileView *v = [array objectAtIndex:0];
+    
+    
+    NSIndexSet *set = [_scrollview indexesForTile:v atPosition:0];
+    
+    [_scrollview removeTile:0];
+    
+    [array enumerateObjectsAtIndexes:set options:NSEnumerationConcurrent usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+        STAssertEqualObjects([obj class], [NSNull class], @"object at index %u is not NSNull. is:%@",idx,[obj class]);
+    }];
+        
+        
+    
 
 }
 
@@ -553,6 +572,46 @@
     
 }
 
+-(void)testFrameForTileAtIndex {
+    
+    CGRect actual;
+    CGRect expected;
+    
+    // 2x2 tile at index 0,0
+    ACTileView *tile = [[ACTileView alloc] initWithFrame:CGRectZero];
+    [tile setTileSize:_tileSize];
+    [tile setSizeInTiles:CGSizeMake(2, 2)];
+    actual = [_scrollview frameForTile:tile atIndex:ACTileIndexMake(0, 0)];
+    expected =CGRectMake(0, 0, _tileSize.width * 2, _tileSize.height *2);
+    
+    STAssertTrue(CGRectEqualToRect(actual, expected), @"size for inserting 2x2 tile at 0,0 should be: %@. Actual: %@",NSStringFromCGRect(expected),NSStringFromCGRect(actual));
+    
+    // 2x2 tile at index 1,1
+    actual = [_scrollview frameForTile:tile atIndex:ACTileIndexMake(1, 1)];
+    expected = CGRectMake(_tileSize.width, _tileSize.height, _tileSize.width * 2, _tileSize.height *2);
+    
+    STAssertTrue(CGRectEqualToRect(actual, expected), @"size for inserting 2x2 tile at 1,1 should be: %@. Actual: %@",NSStringFromCGRect(expected),NSStringFromCGRect(actual));
+    
+    // 2x2 tile at index 1,2
+    actual = [_scrollview frameForTile:tile atIndex:ACTileIndexMake(1, 2)];
+    expected = CGRectMake(_tileSize.width *2, _tileSize.height, _tileSize.width * 2, _tileSize.height *2);
+    
+    STAssertTrue(CGRectEqualToRect(actual, expected), @"size for inserting 2x2 tile at 1,2 should be: %@. Actual: %@",NSStringFromCGRect(expected),NSStringFromCGRect(actual));
+    
+    // 3x3 tile at index 0,0
+    [tile setSizeInTiles:CGSizeMake(3, 3)];
 
+    actual = [_scrollview frameForTile:tile atIndex:ACTileIndexMake(0, 0)];
+    expected = CGRectMake(0, 0, _tileSize.width * 3, _tileSize.height *3);
+    
+    STAssertTrue(CGRectEqualToRect(actual, expected), @"size for inserting 2x2 tile at 1,2 should be: %@. Actual: %@",NSStringFromCGRect(expected),NSStringFromCGRect(actual));
+    
+    [tile setSizeInTiles:CGSizeMake(1, 1)];
+
+    actual = [_scrollview frameForTile:tile atIndex:ACTileIndexMake(1, 1)];
+    expected = CGRectMake(_tileSize.width, _tileSize.height, _tileSize.width, _tileSize.height);
+    
+    STAssertTrue(CGRectEqualToRect(actual, expected), @"size for inserting 1x1 tile at 1,1 should be: %@. Actual: %@",NSStringFromCGRect(expected),NSStringFromCGRect(actual));
+}
 
 @end

@@ -25,31 +25,28 @@
 
 -(void)addTile:(id<TiledViewProtocol>)tile at:(ACTileIndex)index;
 
+-(void)addTile:(id<TiledViewProtocol>)tile withBestFitCriteriaFromIndex:(NSUInteger)index;
+
 -(void)rearrange;
+
+-(CGRect)frameForTile:(id<TiledViewProtocol>)tile atIndex:(ACTileIndex)index ;
+
+
+
 @end
 
-@implementation ACTiledScrollView (TestingHelpers)
+@interface ACTiledScrollView (TestingHelpers)
 
 /*
  DO NOT USE THIS METHOD. TESTING PURPOSES ONLY
  */
--(void)setTileArray:(NSMutableArray*)array {
-    
-    [_tiles autorelease];
-    _tiles = [array retain];
-    for (UIView *v in [self subviews]) {
-        [v removeFromSuperview];
-    }
-    
-    [self rearrange];
-}
+-(NSMutableArray*)tileArray;
+
 
 /*
  DO NOT USE THIS METHOD. TESTING PURPOSES ONLY
  */
--(NSMutableArray*)tileArray{
-
-    return _tiles;
-}
+-(void)setTileArray:(NSMutableArray*)array;
 
 @end
+
