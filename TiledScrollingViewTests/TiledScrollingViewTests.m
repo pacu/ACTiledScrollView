@@ -157,7 +157,7 @@
     [_scrollview appendTile:view];
     
     
-    expected =  CGRectMake(_tileSize.width*2,_tileSize.width,view.frame.size.width,view.frame.size.height);
+    expected =  CGRectMake(_tileSize.width*2,_tileSize.height*2,view.frame.size.width,view.frame.size.height);
     
     STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a fifth 1x1 tile to this view,, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
     
@@ -170,7 +170,7 @@
     [_scrollview appendTile:view];
     
     
-    expected =  CGRectMake(_tileSize.width*2,_tileSize.width*2,view.frame.size.width,view.frame.size.height);
+    expected =  CGRectMake(_tileSize.width*3,0,view.frame.size.width,view.frame.size.height);
     
     STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appending a sixth 1x1 tile to this view,, rect should be: %@. Actual frame:%@",NSStringFromCGRect(expected), NSStringFromCGRect(view.frame));
     
@@ -422,6 +422,7 @@
     [_scrollview addTile:view at:ACTileIndexMake(0, 0)];
     
     STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(0, 0, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0, 0, _tileSize.width,_tileSize.height)));
+    
     
     [_scrollview addTile:view at:ACTileIndexMake(0, 1)];
     

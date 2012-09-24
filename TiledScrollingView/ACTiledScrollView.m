@@ -227,7 +227,17 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
         
         NSIndexSet *indexSet = [self indexesForTile:tile at:index];
         
-        [self isIndexSetAvailable:indexSet];
+        if ([self isIndexSetAvailable:indexSet]){
+        
+            [self addTile:tile withIndexSet:indexSet];
+        }else {
+            [self addTile:tile withBestFitCriteriaFromIndex:indexFromTileIndex(index, _vTiles)];
+        }
+    } else {
+        NSDictionary *dict = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:self,tile, nil] forKeys:[NSArray arrayWithObjects:@"view",@"tile", nil]];
+        
+        @throw [NSException exceptionWithName:@"TileDoesNotFitException"
+                                       reason:@"tile does not fit this ACTiledScrollView" userInfo:dict];
     }
     
 
@@ -283,6 +293,11 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     
     CGRect frame = [self frameForTile:tile at:[indexSet firstIndex]];
     [[tile tileView] setFrame:frame];
+    
+    
+    ACTileIndex tileIndex = tileIndexFromIndex([indexSet firstIndex], _vTiles);
+    
+    [tile setTileIndex:tileIndex];
     
     [self addSubview:[tile tileView]];
     
