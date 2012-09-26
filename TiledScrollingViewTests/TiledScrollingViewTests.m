@@ -100,7 +100,7 @@
     // append 1x1to view that has zero elements
     [_scrollview appendTile:view];
     CGRect expected = CGRectMake(0,0,view.frame.size.width,view.frame.size.height);
-    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appeding 1x1 tile to empty view, rect should be: %@. Actual frame:%@",expected, view.frame);
+    STAssertTrue(CGRectEqualToRect(view.frame, expected),@"When appeding 2x2 tile to empty view, rect should be: %@. Actual frame:%@",expected, view.frame);
     
 }
 
@@ -443,7 +443,6 @@
     
     [view setTileSize:_tileSize];
     [view setSizeInTiles:CGSizeMake(2, 2)];
-    NSAssert2(CGSizeEqualToSize(view.frame.size, _tileSize), @"Sizes are not equal actual %@  expected:%@", NSStringFromCGSize(view.frame.size), NSStringFromCGSize(view.frame.size));
     
     
     ACTileView *invalidView = [[[ACTileView alloc] initWithFrame:CGRectZero]autorelease];
@@ -453,19 +452,19 @@
     
     [_scrollview addTile:view at:ACTileIndexMake(0, 0)];
     
-    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(0, 0, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0, 0, _tileSize.width,_tileSize.height)));
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(0, 0, _tileSize.width*2,_tileSize.height*2)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0, 0, _tileSize.width,_tileSize.height)));
     
     [_scrollview addTile:view at:ACTileIndexMake(0, 1)];
     
-    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(_tileSize.width, 0, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(_tileSize.width, 0, _tileSize.width,_tileSize.height)));
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(view.frame.size.width, 0, view.frame.size.width,view.frame.size.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(_tileSize.width, 0, _tileSize.width,_tileSize.height)));
     
     [_scrollview addTile:view at:ACTileIndexMake(1, 0)];
     
-    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(0, _tileSize.height, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0,_tileSize.height, _tileSize.width,_tileSize.height)));
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(1024, 0, view.frame.size.width,view.frame.size.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0,_tileSize.height, _tileSize.width,_tileSize.height)));
     
     [_scrollview addTile:view at:ACTileIndexMake(1, 1)];
     
-    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(_tileSize.width, _tileSize.height, _tileSize.width,_tileSize.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(0,_tileSize.height, _tileSize.width,_tileSize.height)));
+    STAssertTrue(CGRectEqualToRect([view frame], CGRectMake(1536, 0, view.frame.size.width,view.frame.size.height)), @"View was not added with the correct frame. Actual: %@, Expected:%@", NSStringFromCGRect([view frame]), NSStringFromCGRect(CGRectMake(1536, 0, view.frame.size.width,view.frame.size.height)));
     
     
 }

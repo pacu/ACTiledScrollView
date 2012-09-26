@@ -45,4 +45,9 @@
 -(void)testIsTileCompatible;
 -(void)testTileFitsIn;
 -(void)testResizeArrayToFitIndexSet;
+-(void)testBestFit2x2Tile;
+-(void)testBestFit1x1Tile;
+-(void)testAdd2x2TileAtEmptyView;
+-(void)testAdd1x1TileAtEmptyView;
+
 @end

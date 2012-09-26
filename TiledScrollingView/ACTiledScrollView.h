@@ -57,6 +57,7 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows);
     NSMutableArray *_tiles;
     NSUInteger _minHeight;
     NSMutableDictionary *_reuseDictionary;
+    NSUInteger _lastUsedIndex;
 
 }
 

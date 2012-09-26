@@ -96,7 +96,7 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
         _vTiles = vTiles;
         _hTiles = hTiles;
         _tileSize = tileSize;
-        
+        _lastUsedIndex = 0;
         [self setContentSize:rect.size];
         NSUInteger capacity = (vTiles*hTiles);
         NSNull *nullObject = [NSNull null];
@@ -248,21 +248,28 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     NSUInteger idx =index;
     NSIndexSet *indexSet;
     BOOL foundIndex = NO;
+    NSRange range;
+    range.location =idx;
+    range.length = [_tiles count]-idx;
     do {
-        NSRange range;
-        range.location =idx;
-        range.length = [_tiles count]-idx;
+        
         idx = [_tiles indexOfObjectIdenticalTo:[NSNull null] inRange:range];
         
         if (idx != NSNotFound) {
-            
-            BOOL tileFits = [self tile:tile fitsIn:tileIndexFromIndex(idx, _vTiles)];
-            indexSet = [self indexesForTile:tile atPosition:idx];
+            ACTileIndex tileIndex = tileIndexFromIndex(idx, _vTiles);
+            BOOL tileFits = [self tile:tile fitsIn:tileIndex];
+            indexSet = [self indexesForTile:tile at:tileIndex];
             BOOL tileSizeAvailable = [self isIndexSetAvailable:indexSet];
             
             if (tileFits && tileSizeAvailable)
                 foundIndex = YES;
+            else{
+                idx ++;
+                range.location =idx;
+                range.length = [_tiles count]-idx;
+            }
         }
+       
         
         
     }while (!foundIndex && idx != NSNotFound);
@@ -270,7 +277,7 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     if (!foundIndex)
         [self appendTile:tile];
     else {
-        indexSet = [self indexesForTile:tile atPosition:idx];
+       // indexSet = [self indexesForTile:tile atPosition:idx];
         
         [self addTile:tile withIndexSet:indexSet];
     }
@@ -300,7 +307,9 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     [tile setTileIndex:tileIndex];
     
     [self addSubview:[tile tileView]];
-    
+    if ([indexSet lastIndex] > _lastUsedIndex){
+        _lastUsedIndex = [indexSet lastIndex];
+    }
     // readjust content size
     CGFloat newOffset = (frame.origin.x + frame.size.width);
     if (newOffset > self.contentSize.width) {
@@ -316,47 +325,54 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
  */
 
 -(void)appendTile:(id<TiledViewProtocol>)tile {
-
+    
     NSNull *nullObject = [NSNull null];
-    NSInteger idx;
-    for (idx = [_tiles count]-1; idx >= 0; idx--) {
-        
-        if ([_tiles objectAtIndex:idx] != nullObject) {
+    NSInteger idx=_lastUsedIndex;
+    BOOL foundIndex = NO;
+    NSIndexSet *indexSet  = nil;
+    ACTileIndex tileIndex = tileIndexFromIndex(_lastUsedIndex, _vTiles);
+    
+    for (idx = _lastUsedIndex; idx<[_tiles count] &&  !foundIndex; idx++) {
+        tileIndex = tileIndexFromIndex(idx, _vTiles);
+        BOOL tileFits = [self tile:tile fitsIn:tileIndex];
+        if(tileFits) {
+            indexSet = [self indexesForTile:tile at:tileIndex];
+            foundIndex = [self isIndexSetAvailable:indexSet];
             
-
-            break;
+            
         }
         
     }
-    ACTileIndex possibleIndex = tileIndexFromIndex(idx +1 , _vTiles);
     
-    BOOL tileFits = [self tile:tile fitsIn:possibleIndex];
+//    if (!tileFits) {
+//        
+//        @throw [NSException exceptionWithName:@"InvalidTileSize"
+//                                       reason:[NSString stringWithFormat:@"TileSize %@ does not match this tilesize %@",
+//                                               NSStringFromCGSize([tile tileSize]),
+//                                               NSStringFromCGSize(_tileSize)]
+//                                     userInfo:nil];
+//    }
     
-    if (!tileFits) {
-        
-        @throw [NSException exceptionWithName:@"InvalidTileSize"
-                                       reason:[NSString stringWithFormat:@"TileSize %@ does not match this tilesize %@",
-                                               NSStringFromCGSize([tile tileSize]),
-                                               NSStringFromCGSize(_tileSize)]
-                                     userInfo:nil];
-    }
     
-    NSIndexSet *possibleIndexSet = [self indexesForTile:tile at:possibleIndex];
     
     // if necessary expand the tiles array
-    if ([possibleIndexSet lastIndex] >= [_tiles count]) {
+    if (!foundIndex) {
         
-        [_tiles autorelease];
-        _tiles = [[self resizeArray:_tiles ToFitIndexSet:possibleIndexSet] retain];
         
+        [self resizeArrayByAddingFullGrid];
+        [self appendTile:tile];
+        
+    }else {
+        NSIndexSet *possibleIndexSet = [self indexesForTile:tile at:tileIndex];
+        [self addTile:tile withIndexSet:possibleIndexSet];
     }
     
-    [self addTile:tile withIndexSet:possibleIndexSet];
     
+    
+}
     
     
 
-}
 
 /**
  removes the desired tile from the view using the supplied block to compare the view;
@@ -379,7 +395,10 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     id<TiledViewProtocol>  tile = [_tiles objectAtIndex:position];
     [[tile tileView] removeFromSuperview];
     NSIndexSet *indices  = [self indexesForTile:tile atPosition:position];
-    [_tiles removeObjectsAtIndexes:indices];
+    [indices enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        
+        [_tiles replaceObjectAtIndex:idx withObject:[NSNull null]];
+    }];
     
 }
 
@@ -402,19 +421,20 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     if (![self tile:tile fitsIn:position]){
         return nil;
     }
-    NSMutableIndexSet *set = [[[NSMutableIndexSet alloc] init] autorelease];
+    NSMutableIndexSet *set = [[NSMutableIndexSet alloc] init];
     
     CGSize size = [tile sizeInTiles];
     NSInteger row, col;
     col = position.col;
     row = position.row;
-    
+    NSUInteger index =0;
     for (NSUInteger i = col; i< (col+ size.width); i++) {
         for (NSUInteger j = row; j<(row +size.height); j++) {
-            NSUInteger index = i * _vTiles + j;
+             index = i * _vTiles + j;
             [set addIndex:index];
         }
     }
+    [set autorelease];
     return [[[NSIndexSet alloc]initWithIndexSet:set] autorelease];
     
 }
@@ -434,6 +454,13 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
  */
 
 -(BOOL)isIndexSetAvailable:(NSIndexSet*)indexSet {
+    if (indexSet == nil)
+        return false;
+    BOOL firstIndexInBounds =[indexSet firstIndex] >= [_tiles count];
+    BOOL lastIndexInBounds = [indexSet lastIndex]>= [_tiles count];
+    if (firstIndexInBounds || lastIndexInBounds) {
+        return NO;
+    }
     
     __block BOOL isAvailable = YES;
     [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
@@ -478,11 +505,12 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     if (!fitsVertically)
         return NO;
     
-    BOOL fitsHorizontally = (_hTiles - col) >= [tile sizeInTiles].width;
+    BOOL fitsHorizontally = [tile sizeInTiles].width <=_hTiles;
     
     if (!fitsHorizontally) {
-        return NO;
+        return NO;  
     }
+    
     return YES;
 }
 
@@ -517,6 +545,35 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     
     
 }
+    
+-(NSMutableArray*)resizeArrayByAddingFullGrid:(NSMutableArray *)array {
+    NSMutableIndexSet *newIndexSet = [NSMutableIndexSet indexSetWithIndex:[array count]];
+    NSUInteger lastIndex = [array count]+ (_vTiles * _hTiles)-1;
+    [newIndexSet addIndex:lastIndex];
+    return [self resizeArray:array ToFitIndexSet:newIndexSet];
+    
+}
+
+
+/*
+ 
+ wrapper method for -(NSMutableArray*)resizeArrayByAddingFullGrid:(NSMutableArray *)array
+ */
+
+-(void)resizeArrayByAddingFullGrid {
+    
+    [_tiles autorelease];
+    _tiles = [[self resizeArrayByAddingFullGrid:_tiles] retain];
+    
+}
+/**
+ wrapper method for -(NSMutableArray*)resizeArray:(NSMutableArray*)array ToFitIndexSet:(NSIndexSet*)indexSet
+ */
+-(void)resizeArrayToFitIndexSet:(NSIndexSet*)indexSet {
+    [_tiles autorelease];
+    _tiles = [self resizeArray:_tiles ToFitIndexSet:indexSet];
+}
+    
 
 /**
  

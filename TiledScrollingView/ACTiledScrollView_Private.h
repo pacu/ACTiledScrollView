@@ -21,7 +21,7 @@
  */
 -(NSMutableArray*)resizeArray:(NSMutableArray*)array ToFitIndexSet:(NSIndexSet*)indexSet;
 
-
+-(NSMutableArray*)resizeArrayByAddingFullGrid:(NSMutableArray *)array;
 
 -(void)addTile:(id<TiledViewProtocol>)tile at:(ACTileIndex)index;
 
