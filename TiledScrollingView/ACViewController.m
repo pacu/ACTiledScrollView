@@ -25,23 +25,49 @@
 //THE SOFTWARE.
 //
 #import "ACViewController.h"
-
+#import "ACTiledScrollView.h"
+#import "ACTileView.h"
 @interface ACViewController ()
 
 @end
     
 @implementation ACViewController
-
+@synthesize array,scrollview;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    CGSize tileSize = CGSizeMake(256,192);
+    self.scrollview = [[[ACTiledScrollView alloc]initWithTileSize:tileSize height:3 width:4] autorelease];
+    
+    self.scrollview.frame =self.view.frame;
+    
+    ACTileView *tile = [[[ACTileView alloc] initWithFrame:CGRectZero] autorelease];
+    [tile setBackgroundColor:[UIColor redColor]];
+    [tile setTileSize:tileSize];
+    [tile setSizeInTiles:CGSizeMake(2, 2)];
+    
+    [scrollview addTile:tile at:tileIndexFromIndex(0, 3)];
+    
+    for (NSUInteger idx =0; idx<15; idx++) {
+        ACTileView *v = [[[ACTileView alloc] initWithFrame:CGRectZero] autorelease];
+        [v setBackgroundColor:[UIColor greenColor]];
+        [v setTileSize:tileSize];
+        [v setSizeInTiles:CGSizeMake(1, 1)];
+        [self.scrollview addTile:v at:tileIndexFromIndex(0, 3)];
+    }
+    
+    [self.view addSubview:self.scrollview];
+    
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    
+    self.scrollview = nil;
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

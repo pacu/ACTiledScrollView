@@ -25,7 +25,11 @@
 //THE SOFTWARE.
 //
 #import <UIKit/UIKit.h>
-
+@class ACTiledScrollView;
 @interface ACViewController : UIViewController
+
+
+@property (nonatomic,retain) ACTiledScrollView *scrollview;
+@property (nonatomic,retain) NSMutableArray *array;
 
 @end
