@@ -9,12 +9,18 @@
 #import "ACTileView.h"
 #import "ACTiledScrollView.h"
 @implementation ACTileView
-
+@synthesize label;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.label = [[[UILabel alloc]initWithFrame:self.bounds]autorelease];
+        [self.label setFont:[UIFont fontWithName:@"Arial" size:20]];
+        [self.label setBackgroundColor:[UIColor clearColor]];
+        [self.label setTextColor:[UIColor blackColor]];
+        [self.label setTextAlignment:NSTextAlignmentCenter];
+        [self addSubview:self.label];
     }
     return self;
 }

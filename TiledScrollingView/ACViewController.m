@@ -25,22 +25,23 @@
     
     self.scrollview.frame =self.view.frame;
     [self.scrollview setBackgroundColor:[UIColor grayColor]];
-    ACTileView *tile = [[[ACTileView alloc] initWithFrame:CGRectZero] autorelease];
+    ACTileView *tile = [[[ACTileView alloc] initWithFrame:CGRectMake(0, 0, tileSize.width*2, tileSize.height*2)] autorelease];
     [tile setBackgroundColor:[UIColor redColor]];
     [tile setTileSize:tileSize];
     [tile setSizeInTiles:CGSizeMake(2, 2)];
-
+    [tile.label setText:@"0"];
     [tile.layer setBorderColor:[[UIColor blackColor] CGColor]];
     [tile.layer setBorderWidth:2.0];
     [scrollview addTile:tile at:tileIndexFromIndex(0, 3)];
     
     for (NSUInteger idx =0; idx<15; idx++) {
-        ACTileView *v = [[[ACTileView alloc] initWithFrame:CGRectZero] autorelease];
+        ACTileView *v = [[[ACTileView alloc] initWithFrame:CGRectMake(0, 0, tileSize.width, tileSize.height)] autorelease];
         [v setBackgroundColor:[UIColor greenColor]];
         [v setTileSize:tileSize];
         [v setSizeInTiles:CGSizeMake(1, 1)];
         [v.layer setBorderColor:[[UIColor blackColor] CGColor]];
         [v.layer setBorderWidth:2.0];
+        [v.label setText:[NSString stringWithFormat:@"%d",idx+1]];
         [self.scrollview addTile:v at:tileIndexFromIndex(0, 3)];
     }
     
@@ -66,4 +67,21 @@
     }
 }
 
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    NSLog(@"-(void)willRotateToInterfaceOrientation:%d duration:%f",toInterfaceOrientation,duration);
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)&& UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+        return;
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)&& UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
+        return;
+    
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+        [self.scrollview setSizeInTiles:CGSizeMake(4, 3)];
+    } else {
+        [self.scrollview setSizeInTiles:CGSizeMake(3, 4)];
+    }
+        
+}
 @end

@@ -115,16 +115,26 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
 
 #pragma view layout methods
 -(void)rearrange {
+    NSMutableArray *newArray = [[NSMutableArray alloc] initWithCapacity:[_tiles count]];
     
-    for (NSUInteger i=0; i<[_tiles count]; i++) {
-        id <TiledViewProtocol> tile = [_tiles objectAtIndex:i];
-        
-        if (![ACTilePlaceholder isPlaceholder:tile]){
-            
-            
-        }
-
+    NSNull *nullObject = [NSNull null];
+    for (NSUInteger idx = 0;idx< [_tiles count]; idx++) {
+        [newArray addObject:nullObject];
     }
+    
+    NSMutableArray *oldArray = _tiles;
+    
+    _tiles = newArray;
+    _lastUsedIndex = 0;
+    [oldArray enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if ([obj conformsToProtocol:@protocol(TiledViewProtocol)]){
+            [self addTile:(id<TiledViewProtocol>)obj at:tileIndexFromIndex(0, _vTiles)];
+        }
+    }];
+    
+    [oldArray autorelease];
+    
 }
 
 
@@ -132,16 +142,39 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
     return CGSizeMake(_hTiles, _vTiles);
 }
 
+/**
+ Sets the size of this view measured in tiles
+ */
+-(void)setSizeInTiles:(CGSize)sizeInTiles {
+    
+
+    if (sizeInTiles.width <=0) {
+        
+        @throw [[NSException alloc] initWithName:@"InvalidArgumentException" reason:@"size can't be zero" userInfo:nil];
+    }
+    
+//    if (sizeInTiles.width * _tileSize.width > [[UIScreen mainScreen] bounds].size.width) {
+//        @throw [[NSException alloc] initWithName:@"InvalidArgumentException" reason:@"width can't be bigger than screen size" userInfo:nil];
+//    }
+    if (sizeInTiles.height <=0) {
+        
+        @throw [[NSException alloc] initWithName:@"InvalidArgumentException" reason:@"size can't be zero" userInfo:nil];
+    }
+//    if (sizeInTiles.height * _tileSize.height > [[UIScreen mainScreen] bounds].size.height) {
+//        @throw [[NSException alloc] initWithName:@"InvalidArgumentException" reason:@"height can't be bigger than screen size" userInfo:nil];
+//    }
+    _hTiles = sizeInTiles.width;
+    _vTiles = sizeInTiles.height;
+    
+    [(UIScrollView*)self setFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y, _hTiles*_tileSize.width, _vTiles*_tileSize.height)];
+    [self setContentSize:CGSizeMake(_hTiles * _tileSize.width, _vTiles * _tileSize.height)];
+    [self rearrange];
+}
+
 -(CGPoint)origin {
     return [self frame].origin;
 }
 
-//-(void)setFrame:(CGRect)frame{
-//
-//
-//    [super setFrame:newFrame];
-//
-//}
 
 
 -(CGSize)sizeThatFits:(CGSize)size {
@@ -635,7 +668,7 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows) {
         [v removeFromSuperview];
     }
     
-    [self rearrange];
+   // [self rearrange];
 }
 
 /*

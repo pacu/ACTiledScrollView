@@ -87,6 +87,10 @@ NSUInteger indexFromTileIndex (ACTileIndex index, NSUInteger rows);
  */
 -(CGSize)sizeInTiles;
 /**
+ Sets the size of this view measured in tiles
+ */
+-(void)setSizeInTiles:(CGSize)sizeInTiles;
+/**
  adds a tile to the view into beginning at the desired tile. If it does not fit in it will be added with a best fit criteria
  */
 

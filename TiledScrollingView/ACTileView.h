@@ -17,5 +17,5 @@
     ACTileIndex _tileIndex;
     
 }
-
+@property (nonatomic,retain) UILabel *label;
 @end
