@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E10F4C91614A01B00C08CBF /* TiledScrollingViewTests_Portrait.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E10F4C81614A01B00C08CBF /* TiledScrollingViewTests_Portrait.m */; };
 		7E3539001606C62F0035BCCA /* ACTileViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E3538FF1606C62F0035BCCA /* ACTileViewTests.m */; };
 		7E92D7731605039700FBF76C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7721605039700FBF76C /* UIKit.framework */; };
 		7E92D7751605039700FBF76C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7741605039700FBF76C /* Foundation.framework */; };
@@ -21,7 +22,7 @@
 		7E92D7951605039800FBF76C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7721605039700FBF76C /* UIKit.framework */; };
 		7E92D7961605039800FBF76C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E92D7741605039700FBF76C /* Foundation.framework */; };
 		7E92D79E1605039800FBF76C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7E92D79C1605039800FBF76C /* InfoPlist.strings */; };
-		7E92D7A11605039800FBF76C /* TiledScrollingViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7A01605039800FBF76C /* TiledScrollingViewTests.m */; };
+		7E92D7A11605039800FBF76C /* TiledScrollingViewTests_Landscape.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7A01605039800FBF76C /* TiledScrollingViewTests_Landscape.m */; };
 		7E92D7B316050C5000FBF76C /* ACTilePlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7B216050C5000FBF76C /* ACTilePlaceholder.m */; };
 		7E92D7B616052A8000FBF76C /* ACCGSizeComparator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7B516052A8000FBF76C /* ACCGSizeComparator.m */; };
 		7E92D7BD16061C6600FBF76C /* ACTiledScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92D7BC16061C6600FBF76C /* ACTiledScrollView.m */; };
@@ -40,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7E10F4C71614A01B00C08CBF /* TiledScrollingViewTests_Portrait.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiledScrollingViewTests_Portrait.h; sourceTree = "<group>"; };
+		7E10F4C81614A01B00C08CBF /* TiledScrollingViewTests_Portrait.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiledScrollingViewTests_Portrait.m; sourceTree = "<group>"; };
 		7E3538FE1606C62F0035BCCA /* ACTileViewTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTileViewTests.h; sourceTree = "<group>"; };
 		7E3538FF1606C62F0035BCCA /* ACTileViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTileViewTests.m; sourceTree = "<group>"; };
 		7E92D76E1605039700FBF76C /* TiledScrollingView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TiledScrollingView.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,8 +63,8 @@
 		7E92D7931605039800FBF76C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		7E92D79B1605039800FBF76C /* TiledScrollingViewTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TiledScrollingViewTests-Info.plist"; sourceTree = "<group>"; };
 		7E92D79D1605039800FBF76C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		7E92D79F1605039800FBF76C /* TiledScrollingViewTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiledScrollingViewTests.h; sourceTree = "<group>"; };
-		7E92D7A01605039800FBF76C /* TiledScrollingViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiledScrollingViewTests.m; sourceTree = "<group>"; };
+		7E92D79F1605039800FBF76C /* TiledScrollingViewTests_Landscape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiledScrollingViewTests_Landscape.h; sourceTree = "<group>"; };
+		7E92D7A01605039800FBF76C /* TiledScrollingViewTests_Landscape.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiledScrollingViewTests_Landscape.m; sourceTree = "<group>"; };
 		7E92D7AA160503F900FBF76C /* ACTiledScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTiledScrollView.h; sourceTree = "<group>"; };
 		7E92D7B116050C5000FBF76C /* ACTilePlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTilePlaceholder.h; sourceTree = "<group>"; };
 		7E92D7B216050C5000FBF76C /* ACTilePlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTilePlaceholder.m; sourceTree = "<group>"; };
@@ -159,11 +162,13 @@
 		7E92D7991605039800FBF76C /* TiledScrollingViewTests */ = {
 			isa = PBXGroup;
 			children = (
-				7E92D79F1605039800FBF76C /* TiledScrollingViewTests.h */,
-				7E92D7A01605039800FBF76C /* TiledScrollingViewTests.m */,
+				7E92D79F1605039800FBF76C /* TiledScrollingViewTests_Landscape.h */,
+				7E92D7A01605039800FBF76C /* TiledScrollingViewTests_Landscape.m */,
 				7E92D79A1605039800FBF76C /* Supporting Files */,
 				7E3538FE1606C62F0035BCCA /* ACTileViewTests.h */,
 				7E3538FF1606C62F0035BCCA /* ACTileViewTests.m */,
+				7E10F4C71614A01B00C08CBF /* TiledScrollingViewTests_Portrait.h */,
+				7E10F4C81614A01B00C08CBF /* TiledScrollingViewTests_Portrait.m */,
 			);
 			path = TiledScrollingViewTests;
 			sourceTree = "<group>";
@@ -314,8 +319,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E92D7A11605039800FBF76C /* TiledScrollingViewTests.m in Sources */,
+				7E92D7A11605039800FBF76C /* TiledScrollingViewTests_Landscape.m in Sources */,
 				7E3539001606C62F0035BCCA /* ACTileViewTests.m in Sources */,
+				7E10F4C91614A01B00C08CBF /* TiledScrollingViewTests_Portrait.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

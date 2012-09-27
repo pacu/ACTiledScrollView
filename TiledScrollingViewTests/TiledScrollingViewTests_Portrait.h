@@ -1,18 +1,16 @@
 //
-//  TiledScrollingViewTests.h
-//  TiledScrollingViewTests
+//  TiledScrollingViewTests_Portrait.h
+//  TiledScrollingView
 //
-//  Created by Francisco Gindre on 9/15/12.
+//  Created by Francisco Gindre on 9/27/12.
 //  Copyright (c) 2012 AppCrafter.biz. All rights reserved.
 //
 
-
 #import <SenTestingKit/SenTestingKit.h>
-#import "ACTiledScrollView.h"
-
-@interface TiledScrollingViewTests : SenTestCase
+@class ACTiledScrollView;
+@interface TiledScrollingViewTests_Portrait : SenTestCase
 {
-    @private
+@private
     ACTiledScrollView *_scrollview;
     
     CGSize _tileSize;
@@ -32,5 +30,4 @@
 -(void)testBestFit1x1Tile;
 -(void)testAdd2x2TileAtEmptyView;
 -(void)testAdd1x1TileAtEmptyView;
-
 @end
